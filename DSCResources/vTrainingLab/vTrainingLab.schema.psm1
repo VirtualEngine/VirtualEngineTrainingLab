@@ -263,4 +263,3 @@ configuration vTrainingLab {
     #>
 
 } #end configuration vTrainingLab
-
