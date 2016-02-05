@@ -35,12 +35,20 @@ configuration vTrainingLabGroups {
         else {
             $groupMembers = '';
         }
+        
+        if ($group.Scope) {
+            $groupScope = $group.Scope;
+        }
+        else {
+            $groupScope = 'Global';
+        }
 
         xADGroup "xADGroup_$($group.Name)" {
             GroupName = $group.Name;
             Path = $groupPath;
             Description = $group.Description;
             Members = $groupMembers;
+            GroupScope = $groupScope;
         }
 
     } #end foreach group

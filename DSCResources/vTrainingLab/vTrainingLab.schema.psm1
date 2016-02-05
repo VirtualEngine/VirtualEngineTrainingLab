@@ -196,13 +196,14 @@ configuration vTrainingLab {
                 Description = 'RES ONE Workspace Service Account'; Path = 'OU=Service Accounts,OU=Training'; }
         )
 
+        ## Universal group required to mail-enable
         Groups = @(
-            @{ Name = 'Engineering'; Path = 'OU=Groups,OU=Training'; Description = 'Engineering users'; }
-            @{ Name = 'Executive'; Path = 'OU=Groups,OU=Training'; Description = 'Executive users'; }
-            @{ Name = 'Finance'; Path = 'OU=Groups,OU=Training'; Description = 'Finance users'; }
-            @{ Name = 'Information Technology'; Path = 'OU=Groups,OU=Training'; Description = 'IT users'; }
-            @{ Name = 'Marketing'; Path = 'OU=Groups,OU=Training'; Description = 'Marketing users'; }
-            @{ Name = 'Sales'; Path = 'OU=Groups,OU=Training'; Description = 'Sales users'; }
+            @{ Name = 'Engineering'; Path = 'OU=Groups,OU=Training'; Description = 'Engineering users'; Scope = 'Universal'; }
+            @{ Name = 'Executive'; Path = 'OU=Groups,OU=Training'; Description = 'Executive users'; Scope = 'Universal'; }
+            @{ Name = 'Finance'; Path = 'OU=Groups,OU=Training'; Description = 'Finance users'; Scope = 'Universal'; }
+            @{ Name = 'Information Technology'; Path = 'OU=Groups,OU=Training'; Description = 'IT users'; Scope = 'Universal'; }
+            @{ Name = 'Marketing'; Path = 'OU=Groups,OU=Training'; Description = 'Marketing users'; Scope = 'Universal'; }
+            @{ Name = 'Sales'; Path = 'OU=Groups,OU=Training'; Description = 'Sales users'; Scope = 'Universal'; }
             @{ Name = 'RES AM Administrators'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Automation administation accounts';
                 Members = 'Administrator','Information Technology'; }
             @{ Name = 'RES AM Service Accounts'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Automation service accounts';
