@@ -26,12 +26,12 @@ configuration vTrainingLabGPOs {
 
         TestScript = {
             $gpos = $using:GroupPolicyObjects;
-            $isCompliant = $true;
+            $inDesiredState = $true;
             foreach ($gpo in $gpos.Keys) {
                 $groupPolicyObject = Get-GPO -Name $gpo -ErrorAction SilentlyContinue;
                 if (-not $groupPolicyObject) {
                     Write-Verbose ('Missing GPO ''{0}''.' -f $gpo);
-                    $isCompliant = $false;
+                    $inDesiredState = $false;
                 }
                 elseif ($gpos[$gpo].Link) {
                     foreach ($gpoLink in $gpos[$gpo].Link) {
@@ -42,7 +42,7 @@ configuration vTrainingLabGPOs {
 
                         if (-not $validGpoLink) {
                             Write-Verbose ('Missing GPO ''{0}'' link to ''{1}''.' -f $gpo, $gpoLink);
-                            $isCompliant = $false;
+                            $inDesiredState = $false;
                         }
                         else {
                             ## Check link enabled/disabled
@@ -54,13 +54,19 @@ configuration vTrainingLabGPOs {
                             }
                             if ($gpoEnabled -ne $gpos[$gpo].Enabled) {
                                 Write-Verbose ('GPO ''{0}'' link enabled is ''{1}'', expected ''{2}''.' -f $gpo, $gpoEnabled, $gpos[$gpo].Enabled);
-                                $isCompliant = $false;
+                                $inDesiredState = $false;
                             }
                         }
                     } #end foreach link
                 } #end if link 
             } #end foreach gpo
-            return $isCompliant;
+            if (inDesiredState) {
+                Write-Verbose ('GPOs are in desired state.');
+            }
+            else {
+                Write-Verbose ('GPOs are NOT in desired state.');
+            }
+            return $inDesiredState;
         } #end test script
 
         SetScript = {
@@ -85,7 +91,6 @@ configuration vTrainingLabGPOs {
                             Write-Verbose ('Creating GPO ''{0}'' link to ''{1}''.' -f $gpo, $gpoLink);
                             [ref] $null = New-GPLink -Guid $groupPolicyObject.Id -Target $gpoLink -LinkEnabled $linkEnabled;
                         }
-
                     } #end foreach link
                 } #end if link 
             } #end foreach gpo

@@ -30,6 +30,7 @@ configuration vTrainingLab {
     )
     
     Import-DscResource -Name vTrainingLabOUs, vTrainingLabUsers, vTrainingLabServiceAccounts, vTrainingLabGroups, vTrainingLabFolders;
+    Import-DscResource -Module PrinterManagement;
     
     $folders = @(
         @{  Path = 'C:\SharedData'; }
@@ -254,6 +255,10 @@ configuration vTrainingLab {
     vTrainingLabFolders Folders {
         Folders = $folders;
         Users = $activeDirectory.Users;
+        Departments = $activeDirectory.Users | % { $_.Department } | Select -Unique;
+    }
+    
+    vTrainingLabPrinters Printers {
         Departments = $activeDirectory.Users | % { $_.Department } | Select -Unique;
     }
     
