@@ -4,6 +4,14 @@ configuration vTrainingLab {
         [Parameter(Mandatory)] [ValidateNotNull()]
         [System.Management.Automation.PSCredential] $Password,
         
+        ## IP address used to calculate reverse lookup zone name
+        [Parameter(Mandatory)] [ValidateNotNull()]
+        [System.String] $IPAddress,
+        
+        ## Folder containing GPO backup files
+        [Parameter(Mandatory)] [ValidateNotNull()]
+        [System.String] $GPOBackupPath,
+               
         ## Domain root FQDN used to AD paths
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $DomainName = 'lab.local',
@@ -26,10 +34,15 @@ configuration vTrainingLab {
         
         ## Name of the mandatory user profile
         [Parameter()] [ValidateNotNullOrEmpty()]
-        [System.String] $MandatoryProfileName = 'Mandatory' 
+        [System.String] $MandatoryProfileName = 'Mandatory',
+        
+        ## Hostname for itstore.$DomainName CNAME
+        [Parameter()] [ValidateNotNullOrEmpty()]
+        [System.String] $ITStoreHost = 'controller.lab.local'
     )
     
     Import-DscResource -Name vTrainingLabOUs, vTrainingLabUsers, vTrainingLabServiceAccounts, vTrainingLabGroups, vTrainingLabFolders;
+    Import-DscResource -Name vTrainingLabGPOs, vTrainingLabDns;
     Import-DscResource -Module PrinterManagement;
     
     $folders = @(
@@ -83,6 +96,8 @@ configuration vTrainingLab {
         }
     ) #end folders
     
+    $rootDN = ',DC={0}' -f $DomainName -split '\.' -join ',DC=';
+    
     $activeDirectory = @{
         OUs = @(
             @{ Name = 'Training'; Description = 'Training group and user resources'; }
@@ -98,6 +113,12 @@ configuration vTrainingLab {
                     @{ Name = 'Marketing'; Path = 'OU=Users,OU=Training'; Description = 'Marketing department user accounts'; }
                     @{ Name = 'Sales'; Path = 'OU=Users,OU=Training'; Description = 'Sales department user accounts'; }
         )
+        
+        GPOs = @{
+            'Default Domain Policy' = @{ };
+            'Default Lab Policy' = @{ Link = $rootDN; Enabled = $true; }
+            'Invoke Workspace Composer' = @{ Link = "OU=Servers,OU=Training,$rootDN","OU=Computers,OU=Training,$rootDN"; Enabled = $false; }
+        }
         
         Users = @(
             # Engineering
@@ -221,7 +242,20 @@ configuration vTrainingLab {
     
     } #end ActiveDirectory
     
-    ## Create folder structure
+    #region DNS
+    vTrainingLabDns ReverseLookup {
+        IPAddress = $IPAddress;
+        DomainName = $DomainName;
+        ITStoreHost = $ITStoreHost;
+    }
+    #endregion DNS
+
+    #region Group Policy
+    vTrainingLabGPOs GPOs {
+        GPOBackupPath = $GPOBackupPath;
+        GroupPolicyObjects = $activeDirectory.GPOs;
+    }
+    #endregion Group Policy
     
     #region Active Directory
     vTrainingLabOUs OUs {
@@ -250,6 +284,7 @@ configuration vTrainingLab {
         Users = $activeDirectory.Users;
         DomainName = $DomainName;
     }
+    
     #endregion Active Directory
     
     vTrainingLabFolders Folders {
