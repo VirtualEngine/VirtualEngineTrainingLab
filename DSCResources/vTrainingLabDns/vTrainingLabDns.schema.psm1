@@ -10,7 +10,11 @@ configuration vTrainingLabDns {
         
         ## Hostname for itstore.$DomainName CNAME
         [Parameter()] [ValidateNotNullOrEmpty()]
-        [System.String] $ITStoreHost = 'controller'
+        [System.String] $ITStoreHost = 'controller',
+        
+        ## Hostname for storefront.$DomainName CNAME
+        [Parameter()] [ValidateNotNullOrEmpty()]
+        [System.String] $StorefrontHost = 'xenapp'
     )
     
     Import-DscResource -Module xDnsServer;
@@ -20,9 +24,21 @@ configuration vTrainingLabDns {
     }
     
     xDnsRecord itstore_CName {
-        Name = 'itstore.{0}' -f $DomainName;
+        Name = 'itstore';
         Zone = $DomainName;
         Target = $ITStoreHost;
+        Type = 'CName';
+        Ensure = 'Present';
+    }
+    
+    if (-not $StorefrontHost.Contains('.')) {
+        $StorefrontHost = '{0}.{1}' -f $StorefrontHost, $DomainName;
+    }
+    
+    xDnsRecord storefront_CName {
+        Name = 'storefront';
+        Zone = $DomainName;
+        Target = $StorefrontHost;
         Type = 'CName';
         Ensure = 'Present';
     }
@@ -34,7 +50,7 @@ configuration vTrainingLabDns {
         }
     }
     else {
-        $ipSubnetQuartets = $IPAddress.Split('.');
+        $ipQuartets = $IPAddress.Split('.');
         xDnsServerPrimaryZone ReverseLookup {
             Name = '{0}.{1}.{2}.in-addr.arpa' -f $ipQuartets[2], $ipQuartets[1], $ipQuartets[0];
             DynamicUpdate = 'NonsecureAndSecure';

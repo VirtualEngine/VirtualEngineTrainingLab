@@ -1,15 +1,15 @@
 configuration vTrainingLab {
     param (
         ## Default user password to set/enforce
-        [Parameter(Mandatory)] [ValidateNotNull()]
+        [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential] $Password,
         
         ## IP address used to calculate reverse lookup zone name
-        [Parameter(Mandatory)] [ValidateNotNull()]
+        [Parameter(Mandatory)]
         [System.String] $IPAddress,
         
         ## Folder containing GPO backup files
-        [Parameter(Mandatory)] [ValidateNotNull()]
+        [Parameter(Mandatory)]
         [System.String] $GPOBackupPath,
                
         ## Domain root FQDN used to AD paths
@@ -38,12 +38,15 @@ configuration vTrainingLab {
         
         ## Hostname for itstore.$DomainName CNAME
         [Parameter()] [ValidateNotNullOrEmpty()]
-        [System.String] $ITStoreHost = 'controller.lab.local'
+        [System.String] $ITStoreHost = 'controller.lab.local',
+        
+        ## Hostname for storefront.$DomainName CNAME
+        [Parameter()] [ValidateNotNullOrEmpty()]
+        [System.String] $StorefrontHost = 'xenapp.lab.local'
     )
     
     Import-DscResource -Name vTrainingLabOUs, vTrainingLabUsers, vTrainingLabServiceAccounts, vTrainingLabGroups, vTrainingLabFolders;
-    Import-DscResource -Name vTrainingLabGPOs, vTrainingLabDns;
-    Import-DscResource -Module PrinterManagement;
+    Import-DscResource -Name vTrainingLabGPOs, vTrainingLabDns, vTrainingLabPrinters;
     
     $folders = @(
         @{  Path = 'C:\SharedData'; }
@@ -96,7 +99,7 @@ configuration vTrainingLab {
         }
     ) #end folders
     
-    $rootDN = ',DC={0}' -f $DomainName -split '\.' -join ',DC=';
+    $rootDN = 'DC={0}' -f $DomainName -split '\.' -join ',DC=';
     
     $activeDirectory = @{
         OUs = @(
@@ -243,19 +246,12 @@ configuration vTrainingLab {
     } #end ActiveDirectory
     
     #region DNS
-    vTrainingLabDns ReverseLookup {
+    vTrainingLabDns ReverseLookupAndCNames {
         IPAddress = $IPAddress;
         DomainName = $DomainName;
         ITStoreHost = $ITStoreHost;
     }
     #endregion DNS
-
-    #region Group Policy
-    vTrainingLabGPOs GPOs {
-        GPOBackupPath = $GPOBackupPath;
-        GroupPolicyObjects = $activeDirectory.GPOs;
-    }
-    #endregion Group Policy
     
     #region Active Directory
     vTrainingLabOUs OUs {
@@ -286,6 +282,14 @@ configuration vTrainingLab {
     }
     
     #endregion Active Directory
+
+    #region Group Policy
+    vTrainingLabGPOs GPOs {
+        GPOBackupPath = $GPOBackupPath;
+        GroupPolicyObjects = $activeDirectory.GPOs;
+        DependsOn = '[vTrainingLabOUs]OUs';
+    }
+    #endregion Group Policy
     
     vTrainingLabFolders Folders {
         Folders = $folders;

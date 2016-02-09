@@ -2,7 +2,7 @@ configuration vTrainingLabPrinters {
     param (
         ## List of department names
         [Parameter(Mandatory)]
-        [System.String[] $Departments
+        [System.String[]] $Departments
     )
     
     Import-DscResource -Module PrinterManagement;

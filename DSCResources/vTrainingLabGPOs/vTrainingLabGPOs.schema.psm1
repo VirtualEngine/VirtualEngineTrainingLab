@@ -60,7 +60,7 @@ configuration vTrainingLabGPOs {
                     } #end foreach link
                 } #end if link 
             } #end foreach gpo
-            if (inDesiredState) {
+            if ($inDesiredState) {
                 Write-Verbose ('GPOs are in desired state.');
             }
             else {
@@ -73,11 +73,8 @@ configuration vTrainingLabGPOs {
             $gpoBackupPath = $using:GPOBackupPath;
             $gpos = $using:GroupPolicyObjects;
             foreach ($gpo in $gpos.Keys) {
-                $groupPolicyObject = Get-GPO -Name $gpo -ErrorAction SilentlyContinue;
-                if (-not $groupPolicyObject) {
-                    Write-Verbose ('Importing GPO ''{0}''.' -f $gpo);
-                    $groupPolicyObject = Import-GPO -BackupGpoName $gpo -Path $gpoBackupPath -TargetName $gpo -CreateIfNeeded;
-                }
+                Write-Verbose ('Importing GPO ''{0}''.' -f $gpo);
+                $groupPolicyObject = Import-GPO -BackupGpoName $gpo -Path $gpoBackupPath -TargetName $gpo -CreateIfNeeded;
                 if ($gpos[$gpo].Link) {
                     foreach ($gpoLink in $gpos[$gpo].Link) {
                         $existingGpoLinks = Get-ADObject -Filter { DistinguishedName -eq $gpoLink } -Properties name, distinguishedName, gPLink, gPOptions -ErrorAction SilentlyContinue;
@@ -95,5 +92,6 @@ configuration vTrainingLabGPOs {
                 } #end if link 
             } #end foreach gpo
         } #end set script
+    } #end script TrainingLabGPOs
 
 } #end configuration vTrainingLabGPOs
