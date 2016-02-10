@@ -79,7 +79,7 @@ configuration vTrainingLabFolders {
 
             xSmbShare $department {
                 Name = $department;
-                Path = $folder.Path;
+                Path = $folderPath;
                 FullAccess = 'Domain Admins';
                 ChangeAccess = $department;
                 Ensure = 'Present';
