@@ -3,7 +3,7 @@ configuration vTrainingLabUsers {
         [Parameter(Mandatory)]
         [System.Collections.Hashtable] $Users,
         
-        [Parameter(Mandatory)] [ValidateNotNull()]
+        [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential] $Password,
         
         [Parameter()] [ValidateNotNullOrEmpty()]

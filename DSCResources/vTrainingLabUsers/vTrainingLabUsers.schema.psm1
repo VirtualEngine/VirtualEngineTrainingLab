@@ -5,7 +5,7 @@ configuration vTrainingLabUsers {
         [System.Collections.Hashtable[]] $Users,
         
         ## User password to set/enforce
-        [Parameter(Mandatory)] [ValidateNotNull()]
+        [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential] $Password,
         
         ## Domain root FQDN used to AD paths

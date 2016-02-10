@@ -230,17 +230,17 @@ configuration vTrainingLab {
             @{ Name = 'Marketing'; Path = 'OU=Groups,OU=Training'; Description = 'Marketing users'; Scope = 'Universal'; }
             @{ Name = 'Sales'; Path = 'OU=Groups,OU=Training'; Description = 'Sales users'; Scope = 'Universal'; }
             @{ Name = 'RES AM Administrators'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Automation administation accounts';
-                Members = 'Administrator','Information Technology'; }
+                Members = 'Domain Admins','Information Technology'; Scope = 'DomainLocal'; }
             @{ Name = 'RES AM Service Accounts'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Automation service accounts';
-                Members = 'RESAM'; }
+                Members = 'RESAM'; Scope = 'DomainLocal'; }
             @{ Name = 'RES ITS Administrators'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Service Store administation accounts';
-                    Members = 'Administrator','Information Technology'; }
+                    Members = 'Domain Admins','Information Technology'; Scope = 'DomainLocal'; }
             @{ Name = 'RES ITS Service Accounts'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Service Store service accounts';
-                    Members = 'RESITS'; }
+                    Members = 'RESITS'; Scope = 'DomainLocal'; }
             @{ Name = 'RES WM Administrators'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Workspace administation accounts';
-                    Members = 'Administrator','Information Technology'; }
+                    Members = 'Domain Admins','Information Technology'; Scope = 'DomainLocal'; }
             @{ Name = 'RES WM Service Accounts'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Workspace service accounts';
-                    Members = 'Domain Admins','RESWM'; }
+                    Members = 'Domain Admins','RESWM'; Scope = 'DomainLocal'; }
         )
     
     } #end ActiveDirectory
