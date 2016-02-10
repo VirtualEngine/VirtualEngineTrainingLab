@@ -5,5 +5,5 @@
     Author = 'Iain Brighton';
     CompanyName = 'Virtual Engine';
     Copyright = '(c) 2016 Virtual Engine Limited. All rights reserved.';
-    Description = 'Virtual Engine training lab AD configuration DSC composite resource.';
+    Description = 'Complete Virtual Engine training lab configuration DSC composite resource.';
 }

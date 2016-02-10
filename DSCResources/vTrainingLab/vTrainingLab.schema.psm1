@@ -45,6 +45,7 @@ configuration vTrainingLab {
         [System.String] $StorefrontHost = 'xenapp.lab.local'
     )
     
+    ## Avoid recursive loading of the VirtualEngineTrainingLab composite resource
     Import-DscResource -Name vTrainingLabOUs, vTrainingLabUsers, vTrainingLabServiceAccounts, vTrainingLabGroups, vTrainingLabFolders;
     Import-DscResource -Name vTrainingLabGPOs, vTrainingLabDns, vTrainingLabPrinters;
     
@@ -250,6 +251,7 @@ configuration vTrainingLab {
         IPAddress = $IPAddress;
         DomainName = $DomainName;
         ITStoreHost = $ITStoreHost;
+        StorefrontHost = $StorefrontHost;
     }
     #endregion DNS
     
