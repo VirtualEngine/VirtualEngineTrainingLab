@@ -23,7 +23,7 @@ configuration vTrainingLabDns {
         $ITStoreHost = '{0}.{1}' -f $ITStoreHost, $DomainName;
     }
     
-    xDnsRecord itstore_CName {
+    xDnsRecord 'itstore_CName' {
         Name = 'itstore';
         Zone = $DomainName;
         Target = $ITStoreHost;
@@ -35,7 +35,7 @@ configuration vTrainingLabDns {
         $StorefrontHost = '{0}.{1}' -f $StorefrontHost, $DomainName;
     }
     
-    xDnsRecord storefront_CName {
+    xDnsRecord 'storefront_CName' {
         Name = 'storefront';
         Zone = $DomainName;
         Target = $StorefrontHost;
@@ -44,14 +44,14 @@ configuration vTrainingLabDns {
     }
     
     if ($IPAddress.EndsWith('.in-addr.arpa')) {
-        xDnsServerPrimaryZone ReverseLookup {
+        xDnsServerPrimaryZone 'ReverseLookup' {
             Name = $IPAddress;
             DynamicUpdate = 'NonsecureAndSecure';
         }
     }
     else {
         $ipQuartets = $IPAddress.Split('.');
-        xDnsServerPrimaryZone ReverseLookup {
+        xDnsServerPrimaryZone 'ReverseLookup' {
             Name = '{0}.{1}.{2}.in-addr.arpa' -f $ipQuartets[2], $ipQuartets[1], $ipQuartets[0];
             DynamicUpdate = 'NonsecureAndSecure';
         }

@@ -1,6 +1,5 @@
 @{
-    ModuleVersion = '1.3.4';
-    ## http://robertwesterlund.net/post/2014/03/12/creating-a-composite-dsc-configuration-with-parameters
+    ModuleVersion = '1.3.5';
     RootModule = 'VirtualEngineTrainingLab.psm1';
     GUID = 'b0947d57-80d1-496d-bdab-9b2f777c5e36';
     Author = 'Iain Brighton';

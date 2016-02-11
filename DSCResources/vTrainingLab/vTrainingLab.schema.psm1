@@ -247,7 +247,7 @@ configuration vTrainingLab {
     } #end ActiveDirectory
     
     #region DNS
-    vTrainingLabDns ReverseLookupAndCNames {
+    vTrainingLabDns 'ReverseLookupAndCNames' {
         IPAddress = $IPAddress;
         DomainName = $DomainName;
         ITStoreHost = $ITStoreHost;
@@ -256,18 +256,18 @@ configuration vTrainingLab {
     #endregion DNS
     
     #region Active Directory
-    vTrainingLabOUs OUs {
+    vTrainingLabOUs 'OUs' {
         OUs = $activeDirectory.OUs;
         DomainName = $DomainName;
     }
     
-    vTrainingLabServiceAccounts ServiceAccounts {
+    vTrainingLabServiceAccounts 'ServiceAccounts' {
         ServiceAccounts = $activeDirectory.ServiceAccounts;
         Password = $Password;
         DomainName = $DomainName;
     }
     
-    vTrainingLabUsers Users {
+    vTrainingLabUsers 'Users' {
         Users = $activeDirectory.Users;
         Password = $Password;
         DomainName = $DomainName;
@@ -277,7 +277,7 @@ configuration vTrainingLab {
         MandatoryProfileName = $MandatoryProfileName;
     }
     
-    vTrainingLabGroups Groups {
+    vTrainingLabGroups 'Groups' {
         Groups = $activeDirectory.Groups;
         Users = $activeDirectory.Users;
         DomainName = $DomainName;
@@ -286,25 +286,25 @@ configuration vTrainingLab {
     #endregion Active Directory
 
     #region Group Policy
-    vTrainingLabGPOs GPOs {
+    vTrainingLabGPOs 'GPOs' {
         GPOBackupPath = $GPOBackupPath;
         GroupPolicyObjects = $activeDirectory.GPOs;
         DependsOn = '[vTrainingLabOUs]OUs';
     }
     #endregion Group Policy
     
-    vTrainingLabFolders Folders {
+    vTrainingLabFolders 'Folders' {
         Folders = $folders;
         Users = $activeDirectory.Users;
         Departments = $activeDirectory.Users | % { $_.Department } | Select -Unique;
     }
     
-    vTrainingLabPrinters Printers {
+    vTrainingLabPrinters 'Printers' {
         Departments = $activeDirectory.Users | % { $_.Department } | Select -Unique;
     }
     
     <#  TODO
-        Configure NTFS permissions
+        Configure NTFS permissions?
         Mail-enable mailboxes
         Exchange distrubtion groups?
     #>
