@@ -4,6 +4,8 @@ Active Directory training environment. This module contains the following DSC re
 ###Included Resources
 * vTrainingLab
  * Creates the training folders, file shares, OUs, users, service accounts and groups.
+* vTrainingLabExchange
+ * Mail-enables users and universal security groups.
 * vTrainingLabFolders
  * Creates the training folders and file shares.
 * vTrainingLabGPOs
