@@ -311,6 +311,7 @@ configuration vTrainingLab {
             Users = $activeDirectory.Users;
             ThumbnailPhotoPath = $ThumbnailPhotoPath;
             DomainName = $DomainName;
+            Extension = 'jpg';
         }   
     }
     

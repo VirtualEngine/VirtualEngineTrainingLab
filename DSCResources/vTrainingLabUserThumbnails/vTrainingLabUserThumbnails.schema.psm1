@@ -7,9 +7,16 @@ configuration vTrainingLabUserThumbnails {
         [Parameter(Mandatory)]
         [System.String] $ThumbnailPhotoPath,
         
+        ## File extension added to SamAccountName, i.e. LOCAL01.jpg
+        [Parameter(Mandatory)] [ValidateSet('jpg','png')]
+        [System.String] $Extension,
+        
         ## Domain root FQDN used to AD paths
         [Parameter()] [ValidateNotNullOrEmpty()]
-        [System.String] $DomainName = 'lab.local'
+        [System.String] $DomainName = 'lab.local',
+        
+        [Parameter(Mandatory)] [ValidateSet('jpg','png')]
+        [System.String] $Extension
     )
     
     Import-DscResource -Name vADUserThumbnailPhoto;
@@ -18,7 +25,7 @@ configuration vTrainingLabUserThumbnails {
         vADUserThumbnailPhoto "$($user.SamAccountName)_Thumbnail" {
             DomainName = $DomainName;
             UserName = $user.SamAccountName;
-            ThumbnailPhoto = (Join-Path -Path $ThumbnailPhotoPath -ChildPath $user.SamAccountName);
+            ThumbnailPhoto = '{0}.{1}' -f (Join-Path -Path $ThumbnailPhotoPath -ChildPath $user.SamAccountName), $Extension;
         }
     }
     
