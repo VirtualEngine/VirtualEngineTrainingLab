@@ -42,7 +42,11 @@ configuration vTrainingLab {
         
         ## Hostname for storefront.$DomainName CNAME
         [Parameter()] [ValidateNotNullOrEmpty()]
-        [System.String] $StorefrontHost = 'xenapp.lab.local'
+        [System.String] $StorefrontHost = 'xenapp.lab.local',
+        
+        ## Directory path containing user thumbnail photos 
+        [Parameter()] [ValidateNotNullOrEmpty()]
+        [System.String] $ThumbnailPhotoPath
     )
     
     ## Avoid recursive loading of the VirtualEngineTrainingLab composite resource
@@ -130,7 +134,6 @@ configuration vTrainingLab {
                 Telephone = '01234 567894'; Mobile = '07700 900622'; Fax = '01234 567899';
                 Address = 'Oxford Science Park'; City = 'Oxford'; State = 'OXON'; PostCode = 'AB12 3CD'; Country = 'GB';
                 JobTitle = 'Engineering Manager'; Department = 'Engineering'; Office = 'Medawar Centre'; Company = 'Stark Biotech';
-
                 Path = 'OU=Engineering,OU=Users,OU=Training'; ProfileType = 'Roaming'; }
             @{  SamAccountName = 'MAND01'; GivenName = 'Ann'; Surname = 'Thrax';
                 Telephone = '01234 567900'; Mobile = '07700 900409'; Fax = '01234 567899';
@@ -303,10 +306,12 @@ configuration vTrainingLab {
         Departments = $activeDirectory.Users | % { $_.Department } | Select -Unique;
     }
     
-    <#  TODO
-        Configure NTFS permissions?
-        Mail-enable mailboxes
-        Exchange distrubtion groups?
-    #>
-
+    if ($PSBoundParameters.ContainsKey('ThumbnailPhotoPath')) {
+        vTrainingLabUserThumbnails 'UserThumbnails' {
+            Users = $activeDirectory.Users;
+            ThumbnailPhotoPath = $ThumbnailPhotoPath;
+            DomainName = $DomainName;
+        }   
+    }
+    
 } #end configuration vTrainingLab

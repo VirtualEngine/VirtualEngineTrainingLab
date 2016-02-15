@@ -20,6 +20,8 @@ Active Directory training environment. This module contains the following DSC re
  * Creates the training Active Directory service accounts.
 * vTrainingLabUsers
  * Creates the training Active Directory users.
+* vTrainingLabUserThumbnails
+ * Adds training Active Directory user thumbnails/pictures.
 
 ###Requirements
 There are __dependencies__ on the following DSC resources:
@@ -27,3 +29,4 @@ There are __dependencies__ on the following DSC resources:
 * xSmbShare - https://github.com/PowerShell/xSmbShare
 * xActiveDirectory - https://github.com/PowerShell/xActiveDirectory
 * PrinterManagement - https://github.com/VirtualEngine/PrinterManagement
+* VirtualEngineLab - https://github.com/VirtualEngine/VirtualEngineLab
