@@ -13,10 +13,7 @@ configuration vTrainingLabUserThumbnails {
         
         ## Domain root FQDN used to AD paths
         [Parameter()] [ValidateNotNullOrEmpty()]
-        [System.String] $DomainName = 'lab.local',
-        
-        [Parameter(Mandatory)] [ValidateSet('jpg','png')]
-        [System.String] $Extension
+        [System.String] $DomainName = 'lab.local'
     )
     
     Import-DscResource -Name vADUserThumbnailPhoto;

@@ -51,7 +51,7 @@ configuration vTrainingLab {
     
     ## Avoid recursive loading of the VirtualEngineTrainingLab composite resource
     Import-DscResource -Name vTrainingLabOUs, vTrainingLabUsers, vTrainingLabServiceAccounts, vTrainingLabGroups, vTrainingLabFolders;
-    Import-DscResource -Name vTrainingLabGPOs, vTrainingLabDns, vTrainingLabPrinters;
+    Import-DscResource -Name vTrainingLabGPOs, vTrainingLabDns, vTrainingLabPrinters, vTrainingLabUserThumbnails;
     
     $folders = @(
         @{  Path = 'C:\SharedData'; }
