@@ -10,10 +10,17 @@ configuration vTrainingLabExchange {
         
         ## Search base for groups. All mail-disabled universal security groups under this DN will be mail-enabled
         [Parameter()] [ValidateNotNullOrEmpty()]
-        [System.String] $GroupSearchBase = 'ou=Groups,ou=Training,dc=lab,dc=local'
+        [System.String] $GroupSearchBase = 'ou=Groups,ou=Training,dc=lab,dc=local',
+        
+        [Parameter()] [ValidateNotNullOrEmpty()]
+        [System.String] $DomainController = 'controller.lab.local',
+        
+        [Parameter()] [ValidateNotNullOrEmpty()]
+        [System.String[]] $OrganizationAdministrators = 'Domain Admins'
+        
     )
     
-    Import-DscResource -ModuleName PSDesiredStateConfiguration;
+    Import-DscResource -ModuleName PSDesiredStateConfiguration, xActiveDirectory;
     
     ## Cannot pass credentials via $using: ...
     $Username = $Credential.UserName;
@@ -120,5 +127,12 @@ configuration vTrainingLabExchange {
                 }
         } #end set script
     } #end script MailEnableUsers
+    
+    xADGroup 'OrganisationAdmins' {
+        GroupName = 'Organization Management';
+        Credential = $Credential;
+        DomainController = $DomainController;
+        Members = $OrganizationAdministrators;
+    }
 
 } #end configuration vTrainingLabExchange

@@ -245,6 +245,9 @@ configuration vTrainingLab {
                     Members = 'Domain Admins','Information Technology'; Scope = 'DomainLocal'; }
             @{ Name = 'RES WM Service Accounts'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Workspace service accounts';
                     Members = 'Domain Admins','RESWM'; Scope = 'DomainLocal'; }
+            
+            ## Add RES AM Service Account to domain admins
+            @{ Name = 'Domain Admins'; Path = 'CN=Users'; Members = 'RESAM'; }
         )
     
     } #end ActiveDirectory
