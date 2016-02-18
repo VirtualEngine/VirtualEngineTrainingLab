@@ -44,6 +44,10 @@ configuration vTrainingLab {
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $StorefrontHost = 'xenapp.lab.local',
         
+        ## Hostname for smtp.$DomainName CNAME
+        [Parameter()] [ValidateNotNullOrEmpty()]
+        [System.String] $SmtpHost = 'exchange.lab.local',
+        
         ## Directory path containing user thumbnail photos 
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $ThumbnailPhotoPath
@@ -258,6 +262,7 @@ configuration vTrainingLab {
         DomainName = $DomainName;
         ITStoreHost = $ITStoreHost;
         StorefrontHost = $StorefrontHost;
+        SmtpHost = $SmtpHost;
     }
     #endregion DNS
     

@@ -14,7 +14,11 @@ configuration vTrainingLabDns {
         
         ## Hostname for storefront.$DomainName CNAME
         [Parameter()] [ValidateNotNullOrEmpty()]
-        [System.String] $StorefrontHost = 'xenapp'
+        [System.String] $StorefrontHost = 'xenapp',
+        
+        ## Hostname for storefront.$DomainName CNAME
+        [Parameter()] [ValidateNotNullOrEmpty()]
+        [System.String] $SmtpHost = 'exchange'
     )
     
     Import-DscResource -Module xDnsServer;
@@ -39,6 +43,18 @@ configuration vTrainingLabDns {
         Name = 'storefront';
         Zone = $DomainName;
         Target = $StorefrontHost;
+        Type = 'CName';
+        Ensure = 'Present';
+    }
+    
+    if (-not $SmtpHost.Contains('.')) {
+        $SmtpHost = '{0}.{1}' -f $SmtpHost, $DomainName;
+    }
+    
+    xDnsRecord 'smtp_CName' {
+        Name = 'smtp';
+        Zone = $DomainName;
+        Target = $SmtpHost;
         Type = 'CName';
         Ensure = 'Present';
     }
