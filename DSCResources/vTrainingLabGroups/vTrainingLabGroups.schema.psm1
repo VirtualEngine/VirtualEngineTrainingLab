@@ -47,7 +47,7 @@ configuration vTrainingLabGroups {
             GroupName = $group.Name;
             Path = $groupPath;
             Description = $group.Description;
-            Members = $groupMembers;
+            MembersToInclude = $groupMembers;
             GroupScope = $groupScope;
         }
 

@@ -130,9 +130,10 @@ configuration vTrainingLabExchange {
     
     xADGroup 'OrganisationAdmins' {
         GroupName = 'Organization Management';
+        GroupScope = 'Universal';
         Credential = $Credential;
         DomainController = $DomainController;
-        Members = $OrganizationAdministrators;
+        MembersToInclude = $OrganizationAdministrators;
     }
 
 } #end configuration vTrainingLabExchange
