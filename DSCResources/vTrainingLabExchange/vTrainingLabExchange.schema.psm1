@@ -71,8 +71,9 @@ configuration vTrainingLabExchange {
 
             Get-ADGroup -SearchBase $using:GroupSearchBase -Filter { GroupScope -eq 'Universal' -and Mail -notlike '*' } |
                 ForEach-Object {
-                    Write-Verbose ('Mail-enabling universal group ''{0}''.' -f $_.DistinguishedName);
-                    Enable-DistributionGroup -Identity $_.DistinguishedName;
+                    $alias = $_.Name.ToLower().Replace(' ','');
+                    Write-Verbose ('Mail-enabling universal group ''{0}'' ({1}).' -f $_.DistinguishedName, $alias);
+                    Enable-DistributionGroup -Identity $_.DistinguishedName -Alias $alias;
                 }
         } #end set script
     } #end script 'MailEnableUniversalGroups'
@@ -122,8 +123,9 @@ configuration vTrainingLabExchange {
 
             Get-ADUser -SearchBase $using:UserSearchBase -Filter { Mail -notlike '*' } |
                 ForEach-Object {
-                    Write-Verbose ('Enabling mailbox ''{0}''.' -f $_.UserPrincipalName);
-                    Enable-Mailbox -Identity $_.UserPrincipalName;
+                    $alias = $_.UserPrincipalName.ToLower();
+                    Write-Verbose ('Enabling mailbox ''{0}'' ({1}).' -f $_.UserPrincipalName, $alias);
+                    Enable-Mailbox -Identity $_.UserPrincipalName -Alias $alias;
                 }
         } #end set script
     } #end script MailEnableUsers

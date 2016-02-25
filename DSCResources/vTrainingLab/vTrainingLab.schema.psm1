@@ -121,6 +121,7 @@ configuration vTrainingLab {
                     @{ Name = 'Engineering'; Path = 'OU=Users,OU=Training'; Description = 'Engineering department user accounts'; }
                     @{ Name = 'Executive'; Path = 'OU=Users,OU=Training'; Description = 'Company executive user accounts'; }
                     @{ Name = 'Finance'; Path = 'OU=Users,OU=Training'; Description = 'Finance department user accounts'; }
+                    @{ Name = 'Human Resources'; Path = 'OU=Users,OU=Training'; Description = 'HR departmental user accounts'; }
                     @{ Name = 'Information Technology'; Path = 'OU=Users,OU=Training'; Description = 'IT departmental user accounts'; }
                     @{ Name = 'Marketing'; Path = 'OU=Users,OU=Training'; Description = 'Marketing department user accounts'; }
                     @{ Name = 'Sales'; Path = 'OU=Users,OU=Training'; Description = 'Sales department user accounts'; }
@@ -138,86 +139,103 @@ configuration vTrainingLab {
                 Telephone = '01234 567894'; Mobile = '07700 900622'; Fax = '01234 567899';
                 Address = 'Oxford Science Park'; City = 'Oxford'; State = 'OXON'; PostCode = 'AB12 3CD'; Country = 'GB';
                 JobTitle = 'Engineering Manager'; Department = 'Engineering'; Office = 'Medawar Centre'; Company = 'Stark Biotech';
-                Path = 'OU=Engineering,OU=Users,OU=Training'; ProfileType = 'Roaming'; }
+                Path = 'OU=Engineering,OU=Users,OU=Training'; ProfileType = 'Roaming'; ManagedBy = 'LOCAL05'; }
             @{  SamAccountName = 'MAND01'; GivenName = 'Ann'; Surname = 'Thrax';
                 Telephone = '01234 567900'; Mobile = '07700 900409'; Fax = '01234 567899';
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
                 JobTitle = 'Engineer'; Department = 'Engineering'; Office = 'Stark Tower'; Company = 'Stark Biotech';
-                Path = 'OU=Engineering,OU=Users,OU=Training'; ProfileType = 'Mandatory'; }
+                Path = 'OU=Engineering,OU=Users,OU=Training'; ProfileType = 'Mandatory'; ManagedBy = 'ROAM02'; }
             @{  SamAccountName = 'MAND05'; GivenName = 'Jack'; Surname = 'Hammer';
                 Telephone = '01234 567904'; Mobile = '07700 900415'; Fax = '01234 567899';
                 Address = 'Oxford Science Park'; City = 'Oxford'; State = 'OXON'; PostCode = 'AB12 3CD'; Country = 'GB';
                 JobTitle = 'Engineering Manager'; Department = 'Engineering'; Office = 'Medawar Centre'; Company = 'Stark Biotech';
-                Path = 'OU=Engineering,OU=Users,OU=Training'; ProfileType = 'Mandatory'; }
+                Path = 'OU=Engineering,OU=Users,OU=Training'; ProfileType = 'Mandatory'; ManagedBy = 'ROAM02'; }
             
             # Executive
             @{  SamAccountName = 'LOCAL05'; GivenName = 'Tony'; Surname = 'Stark';
                 Telephone = '01234 567905'; Mobile = '07700 900440'; Fax = '01234 567899';
                 JobTitle = 'Chief Executive Officer'; Department = 'Executive'; Office = 'Stark Tower'; Company = 'Stark Industries';
-                Path = 'OU=Executive,OU=Users,OU=Training'; }
+                Path = 'OU=Executive,OU=Users,OU=Training'; ManagedBy = 'LOCAL05'; }
             
             # Finance
             @{  SamAccountName = 'LOCAL03'; GivenName = 'Robin'; Surname = 'Banks';
                 Telephone = '01234 567891'; Mobile = '07700 900827'; Fax = '01234 567899';
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
                 JobTitle = 'Finance Director'; Department = 'Finance'; Office = 'Stark Tower'; Company = 'Stark Industries';
-                Path = 'OU=Finance,OU=Users,OU=Training'; }
+                Path = 'OU=Finance,OU=Users,OU=Training'; ManagedBy = 'LOCAL05'; }
             @{  SamAccountName = 'ROAM04'; GivenName = 'Owen'; Surname = 'Cash';
                 Telephone = '01234 567896'; Mobile = '07700 900468'; Fax = '01234 567899';
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
                 JobTitle = 'Credit Controller'; Department = 'Finance'; Office = 'Stark Tower'; Company = 'Stark Industries';
-                Path = 'OU=Finance,OU=Users,OU=Training'; ProfileType = 'Roaming'; }
+                Path = 'OU=Finance,OU=Users,OU=Training'; ProfileType = 'Roaming'; ManagedBy = 'LOCAL03'; }
             @{  SamAccountName = 'MAND03'; GivenName = 'Chris'; Surname = 'Cross';
                 Telephone = '01234 567902'; Mobile = '07700 900585'; Fax = '01234 567899';
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
                 JobTitle = 'Finance Clerk'; Department = 'Finance'; Office = 'Stark Tower'; Company = 'Stark Industries';
-                Path = 'OU=Finance,OU=Users,OU=Training'; ProfileType = 'Mandatory'; }
+                Path = 'OU=Finance,OU=Users,OU=Training'; ProfileType = 'Mandatory'; ManagedBy = 'LOCAL03'; }
             
             # Information Technology
             @{  SamAccountName = 'ROAM01'; GivenName = 'Justin'; Surname = 'Case';
                 Telephone = '01234 567893'; Mobile = '07700 900155'; Fax = '01234 567899';
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
                 JobTitle = 'IT Manager'; Department = 'Information Technology'; Office = 'Stark Tower'; Company = 'Stark Industries';
-                Path = 'OU=Information Technology,OU=Users,OU=Training'; ProfileType = 'Roaming'; }
+                Path = 'OU=Information Technology,OU=Users,OU=Training'; ProfileType = 'Roaming'; ManagedBy = 'LOCAL05'; }
             @{  SamAccountName = 'ROAM05'; GivenName = 'Luke'; Surname = 'Warme';
                 Telephone = '01234 567898'; Mobile = '07700 900872'; Fax = '01234 567899';
                 Address = 'Oxford Science Park'; City = 'Oxford'; State = 'OXON'; PostCode = 'AB12 3CD'; Country = 'GB';
                 JobTitle = 'Helpdesk Anaylst'; Department = 'Information Technology'; Office = 'Medawar Centre'; Company = 'Stark Industries';
-                Path = 'OU=Information Technology,OU=Users,OU=Training'; ProfileType = 'Roaming'; }
+                Path = 'OU=Information Technology,OU=Users,OU=Training'; ProfileType = 'Roaming'; ManagedBy = 'ROAM01'; }
             
             # Marketing
             @{  SamAccountName = 'LOCAL04'; GivenName = 'Mike'; Surname = 'Raffone';
                 Telephone = '01234 567890'; Mobile = '07700 900738'; Fax = '01234 567899';
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
                 JobTitle = 'Marketing Manager'; Department = 'Marketing'; Office = 'Stark Tower'; Company = 'Stark Industries';
-                Path = 'OU=Marketing,OU=Users,OU=Training'; }
+                Path = 'OU=Marketing,OU=Users,OU=Training'; ManagedBy = 'LOCAL05'; }
             @{  SamAccountName = 'ROAM03'; GivenName = 'Claire'; Surname = 'Voyant';
                 Telephone = '01234 567895'; Mobile = '07700 900009'; Fax = '01234 567899';
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
                 JobTitle = 'Graphic Artist'; Department = 'Marketing'; Office = 'Stark Tower'; Company = 'Stark Industries';
-                Path = 'OU=Marketing,OU=Users,OU=Training'; ProfileType = 'Roaming'; }
+                Path = 'OU=Marketing,OU=Users,OU=Training'; ProfileType = 'Roaming'; ManagedBy = 'LOCAL04'; }
             @{  SamAccountName = 'MAND02'; GivenName = 'Mona'; Surname = 'Lott';
                 Telephone = '01234 567901'; Mobile = '07700 900576'; Fax = '01234 567899';
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
                 JobTitle = 'Copy Writer'; Department = 'Marketing'; Office = 'Stark Tower'; Company = 'Stark Industries';
-                Path = 'OU=Marketing,OU=Users,OU=Training'; ProfileType = 'Mandatory'; }
+                Path = 'OU=Marketing,OU=Users,OU=Training'; ProfileType = 'Mandatory'; ManagedBy = 'LOCAL04'; }
             
             # Sales
             @{  SamAccountName = 'LOCAL01'; GivenName = 'Warren'; Surname = 'Peace';
                 Telephone = '01234 567892'; Mobile = '07700 900834'; Fax = '01234 567899';
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
                 JobTitle = 'Sales Director'; Department = 'Sales'; Office = 'Stark Tower'; Company = 'Stark Industries';
-                Path = 'OU=Sales,OU=Users,OU=Training'; }
-            @{  SamAccountName = 'LOCAL02'; GivenName = 'Anne'; Surname = 'Chovee';
+                Path = 'OU=Sales,OU=Users,OU=Training'; ManagedBy = 'LOCAL05'; }
+            @{  SamAccountName = 'LOCAL02'; GivenName = 'Lois'; Surname = 'Bidd';
                 Telephone = '01234 567897'; Mobile = '07700 900747'; Fax = '01234 567899';
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
                 JobTitle = 'Account Manager'; Department = 'Sales'; Office = 'Stark Tower'; Company = 'Stark Industries';
-                Path = 'OU=Sales,OU=Users,OU=Training'; }
-            @{  SamAccountName = 'MAND04'; GivenName = 'Al'; Surname = 'Pacca';
+                Path = 'OU=Sales,OU=Users,OU=Training'; ManagedBy = 'LOCAL01'; }
+            @{  SamAccountName = 'MAND04'; GivenName = 'Ollie'; Surname = 'Gark';
                 Telephone = '01234 567903'; Mobile = '07700 900558'; Fax = '01234 567899';
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
                 JobTitle = 'Account Manager'; Department = 'Sales'; Office = 'Stark Tower'; Company = 'Stark Industries';
-                Path = 'OU=Sales,OU=Users,OU=Training'; ProfileType = 'Mandatory'; }
+                Path = 'OU=Sales,OU=Users,OU=Training'; ProfileType = 'Mandatory'; ManagedBy = 'LOCAL01'; }
+                
+            # HR
+            @{  SamAccountName = 'LOCAL06'; GivenName = 'Ona'; Surname = 'Paar';
+                Telephone = '01234 567906'; Mobile = '07700 900087'; Fax = '01234 567899';
+                Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
+                JobTitle = 'HR Director'; Department = 'Human Resources'; Office = 'Stark Tower'; Company = 'Stark Industries';
+                Path = 'OU=Human Resources,OU=Users,OU=Training'; ManagedBy = 'LOCAL05'; }
+            @{  SamAccountName = 'LOCAL07'; GivenName = 'Ally'; Surname = 'Monie';
+                Telephone = '01234 567907'; Mobile = '07700 900249'; Fax = '01234 567899';
+                Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
+                JobTitle = 'HR Administrator'; Department = 'Human Resources'; Office = 'Stark Tower'; Company = 'Stark Industries';
+                Path = 'OU=Human Resources,OU=Users,OU=Training'; ManagedBy = 'LOCAL06'; }
+            @{  SamAccountName = 'LOCAL08'; GivenName = 'Hiram'; Surname = 'Cheaper';
+                Telephone = '01234 567908'; Mobile = '07700 900304'; Fax = '01234 567899';
+                Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
+                JobTitle = 'HR Associate'; Department = 'Human Resources'; Office = 'Stark Tower'; Company = 'Stark Industries';
+                Path = 'OU=Human Resources,OU=Users,OU=Training'; ProfileType = 'Mandatory'; ManagedBy = 'LOCAL06'; }
         )
 
         ServiceAccounts = @(
@@ -231,12 +249,13 @@ configuration vTrainingLab {
 
         ## Universal group required to mail-enable
         Groups = @(
-            @{ Name = 'Engineering'; Path = 'OU=Groups,OU=Training'; Description = 'Engineering users'; Scope = 'Universal'; }
-            @{ Name = 'Executive'; Path = 'OU=Groups,OU=Training'; Description = 'Executive users'; Scope = 'Universal'; }
-            @{ Name = 'Finance'; Path = 'OU=Groups,OU=Training'; Description = 'Finance users'; Scope = 'Universal'; }
-            @{ Name = 'Information Technology'; Path = 'OU=Groups,OU=Training'; Description = 'IT users'; Scope = 'Universal'; }
-            @{ Name = 'Marketing'; Path = 'OU=Groups,OU=Training'; Description = 'Marketing users'; Scope = 'Universal'; }
-            @{ Name = 'Sales'; Path = 'OU=Groups,OU=Training'; Description = 'Sales users'; Scope = 'Universal'; }
+            @{ Name = 'Engineering'; Path = 'OU=Groups,OU=Training'; Description = 'Engineering users'; Scope = 'Universal'; ManagedBy = 'ROAM02'; }
+            @{ Name = 'Executive'; Path = 'OU=Groups,OU=Training'; Description = 'Executive users'; Scope = 'Universal'; ManagedBy = 'LOCAL05'; }
+            @{ Name = 'Finance'; Path = 'OU=Groups,OU=Training'; Description = 'Finance users'; Scope = 'Universal'; ManagedBy = 'LOCAL03'; }
+            @{ Name = 'Information Technology'; Path = 'OU=Groups,OU=Training'; Description = 'IT users'; Scope = 'Universal'; ManagedBy = 'ROAM01'; }
+            @{ Name = 'Marketing'; Path = 'OU=Groups,OU=Training'; Description = 'Marketing users'; Scope = 'Universal'; ManagedBy = 'LOCAL04'; }
+            @{ Name = 'Sales'; Path = 'OU=Groups,OU=Training'; Description = 'Sales users'; Scope = 'Universal'; ManagedBy = 'LOCAL01'; }
+            @{ Name = 'Human Resources'; Path = 'OU=Groups,OU=Training'; Description = 'HR users'; Scope = 'Universal'; ManagedBy = 'LOCAL06'; }
             @{ Name = 'RES AM Administrators'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Automation administation accounts';
                 Members = 'Domain Admins','Information Technology'; Scope = 'DomainLocal'; }
             @{ Name = 'RES AM Service Accounts'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Automation service accounts';

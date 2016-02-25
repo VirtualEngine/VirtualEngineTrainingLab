@@ -43,12 +43,30 @@ configuration vTrainingLabGroups {
             $groupScope = 'Global';
         }
 
-        xADGroup "xADGroup_$($group.Name)" {
-            GroupName = $group.Name;
-            Path = $groupPath;
-            Description = $group.Description;
-            MembersToInclude = $groupMembers;
-            GroupScope = $groupScope;
+        if ($group.ManagedBy) {
+            $user = $Users.Where({ $_.SamAccountName -eq $group.ManagedBy });
+            $userCN = '{0} {1}' -f $user.GivenName, $user.Surname;
+
+            xADGroup "xADGroup_$($group.Name)" {
+                GroupName = $group.Name;
+                Path = $groupPath;
+                Description = $group.Description;
+                MembersToInclude = $groupMembers
+                ManagedBy = 'CN={0},{1}{2}' -f $userCN, $user.Path, $rootDN;
+                GroupScope = $groupScope;
+            }
+            
+        }
+        else {
+
+            xADGroup "xADGroup_$($group.Name)" {
+                GroupName = $group.Name;
+                Path = $groupPath;
+                Description = $group.Description;
+                MembersToInclude = $groupMembers;
+                GroupScope = $groupScope;
+            }
+
         }
 
     } #end foreach group
