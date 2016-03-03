@@ -134,6 +134,12 @@ configuration vTrainingLab {
         }
         
         Users = @(
+            # Executive
+            @{  SamAccountName = 'LOCAL05'; GivenName = 'Tony'; Surname = 'Stark';
+                Telephone = '01234 567905'; Mobile = '07700 900440'; Fax = '01234 567899';
+                JobTitle = 'Chief Executive Officer'; Department = 'Executive'; Office = 'Stark Tower'; Company = 'Stark Industries';
+                Path = 'OU=Executive,OU=Users,OU=Training'; ManagedBy = 'LOCAL05'; }
+            
             # Engineering
             @{  SamAccountName = 'ROAM02'; GivenName = 'Gene'; Surname = 'Poole';
                 Telephone = '01234 567894'; Mobile = '07700 900622'; Fax = '01234 567899';
@@ -150,12 +156,6 @@ configuration vTrainingLab {
                 Address = 'Oxford Science Park'; City = 'Oxford'; State = 'OXON'; PostCode = 'AB12 3CD'; Country = 'GB';
                 JobTitle = 'Engineering Manager'; Department = 'Engineering'; Office = 'Medawar Centre'; Company = 'Stark Biotech';
                 Path = 'OU=Engineering,OU=Users,OU=Training'; ProfileType = 'Mandatory'; ManagedBy = 'ROAM02'; }
-            
-            # Executive
-            @{  SamAccountName = 'LOCAL05'; GivenName = 'Tony'; Surname = 'Stark';
-                Telephone = '01234 567905'; Mobile = '07700 900440'; Fax = '01234 567899';
-                JobTitle = 'Chief Executive Officer'; Department = 'Executive'; Office = 'Stark Tower'; Company = 'Stark Industries';
-                Path = 'OU=Executive,OU=Users,OU=Training'; ManagedBy = 'LOCAL05'; }
             
             # Finance
             @{  SamAccountName = 'LOCAL03'; GivenName = 'Robin'; Surname = 'Banks';

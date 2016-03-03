@@ -123,7 +123,7 @@ configuration vTrainingLabExchange {
 
             Get-ADUser -SearchBase $using:UserSearchBase -Filter { Mail -notlike '*' } |
                 ForEach-Object {
-                    $alias = $_.UserPrincipalName.ToLower();
+                    $alias = ($_.UserPrincipalName.Split('@')[0]).ToLower();
                     Write-Verbose ('Enabling mailbox ''{0}'' ({1}).' -f $_.UserPrincipalName, $alias);
                     Enable-Mailbox -Identity $_.UserPrincipalName -Alias $alias;
                 }

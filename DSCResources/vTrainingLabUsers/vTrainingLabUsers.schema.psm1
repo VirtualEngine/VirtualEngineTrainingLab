@@ -62,34 +62,73 @@ configuration vTrainingLabUsers {
                 $profilePath = '';
             }
         }
+        
+        if ($user.ManagedBy) {
+            $manager = $Users.Where({ $_.SamAccountName -eq $user.ManagedBy });
+            $managerCN = '{0} {1}' -f $manager.GivenName, $manager.Surname;
 
-        xADUser "xADUser_$($user.SamAccountName)" {
-            Path = $userPath;
-            CommonName = "$($user.GivenName) $($user.Surname)";
-            UserName = $user.SamAccountName;
-            DomainName = $DomainName;
-            Password = $Password;
-            UserPrincipalName = "$($user.SamAccountName)@$($DomainName)";
-            GivenName = $user.GivenName;
-            Surname = $user.Surname;
-            DisplayName = "$($user.GivenName) $($user.Surname)";
-            Description = $user.SamAccountName;
-            Office = $user.Office;
-            OfficePhone = $user.Telephone;
-            MobilePhone = $user.Mobile;
-            Fax = $user.Fax;
-            StreetAddress = $user.Address;
-            City = $user.City;
-            State = $user.State;
-            PostalCode = $user.PostCode;
-            Country = $user.Country;
-            PasswordNeverExpires = $true;
-            JobTitle = $user.JobTitle;
-            Department = $user.Department;
-            Company = $user.Company;
-            HomeDrive = $HomeDrive;
-            HomeDirectory = '{0}\{1}\{2}' -f $FileServer, $HomeShare, $user.SamAccountName;
-            ProfilePath = $profilePath;
+            xADUser "xADUser_$($user.SamAccountName)" {
+                Path = $userPath;
+                CommonName = "$($user.GivenName) $($user.Surname)";
+                UserName = $user.SamAccountName;
+                DomainName = $DomainName;
+                Password = $Password;
+                UserPrincipalName = "$($user.SamAccountName)@$($DomainName)";
+                GivenName = $user.GivenName;
+                Surname = $user.Surname;
+                DisplayName = "$($user.GivenName) $($user.Surname)";
+                Description = $user.SamAccountName;
+                Office = $user.Office;
+                OfficePhone = $user.Telephone;
+                MobilePhone = $user.Mobile;
+                Fax = $user.Fax;
+                StreetAddress = $user.Address;
+                City = $user.City;
+                State = $user.State;
+                PostalCode = $user.PostCode;
+                Country = $user.Country;
+                PasswordNeverExpires = $true;
+                JobTitle = $user.JobTitle;
+                Department = $user.Department;
+                Company = $user.Company;
+                HomeDrive = $HomeDrive;
+                HomeDirectory = '{0}\{1}\{2}' -f $FileServer, $HomeShare, $user.SamAccountName;
+                ProfilePath = $profilePath;
+                Manager = 'CN={0},{1}{2}' -f $managerCN, $manager.Path, $rootDN;
+            }
+            
+        }
+        else {
+
+            xADUser "xADUser_$($user.SamAccountName)" {
+                Path = $userPath;
+                CommonName = "$($user.GivenName) $($user.Surname)";
+                UserName = $user.SamAccountName;
+                DomainName = $DomainName;
+                Password = $Password;
+                UserPrincipalName = "$($user.SamAccountName)@$($DomainName)";
+                GivenName = $user.GivenName;
+                Surname = $user.Surname;
+                DisplayName = "$($user.GivenName) $($user.Surname)";
+                Description = $user.SamAccountName;
+                Office = $user.Office;
+                OfficePhone = $user.Telephone;
+                MobilePhone = $user.Mobile;
+                Fax = $user.Fax;
+                StreetAddress = $user.Address;
+                City = $user.City;
+                State = $user.State;
+                PostalCode = $user.PostCode;
+                Country = $user.Country;
+                PasswordNeverExpires = $true;
+                JobTitle = $user.JobTitle;
+                Department = $user.Department;
+                Company = $user.Company;
+                HomeDrive = $HomeDrive;
+                HomeDirectory = '{0}\{1}\{2}' -f $FileServer, $HomeShare, $user.SamAccountName;
+                ProfilePath = $profilePath;
+            }
+        
         }
 
     } #end foreach user
