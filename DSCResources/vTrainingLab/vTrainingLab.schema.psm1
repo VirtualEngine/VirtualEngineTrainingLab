@@ -96,7 +96,7 @@ configuration vTrainingLab {
         @{ Path = 'C:\SharedData\Scripts'; }
         @{
             Path = 'C:\SharedData\Software';
-            Share = 'Software$';
+            Share = 'Software';
             FullControl = 'Everyone';
             Description = 'Software repository';
         }
