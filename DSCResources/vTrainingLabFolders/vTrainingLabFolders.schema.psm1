@@ -13,7 +13,7 @@ configuration vTrainingLabFolders {
         [System.String[]] $Departments
     )
     
-    Import-DscResource -Module PSDesiredStateConfiguration, xSmbShare;
+    Import-DscResource -Module PSDesiredStateConfiguration, xSmbShare, PowerShellAccessControl;
     
     foreach ($folder in $Folders) {
         
@@ -22,6 +22,28 @@ configuration vTrainingLabFolders {
         File $folderId {
             DestinationPath = $folder.Path;
             Type = 'Directory';
+        }
+        
+        if ($folder.ModifyNtfs) {
+            cAccessControlEntry $folderId {
+                Ensure = 'Present';
+                Path = $folder.Path;
+                AceType = 'AccessAllowed';
+                ObjectType = 'Directory';
+                AccessMask = [System.Security.AccessControl.FileSystemRights]::Modify;
+                Principal = $folder.ModifyNtfs;
+            }
+        }
+        
+        if ($folder.FullControlNtfs) {
+            cAccessControlEntry $folderId {
+                Ensure = 'Present';
+                Path = $folder.Path;
+                AceType = 'AccessAllowed';
+                ObjectType = 'Directory';
+                AccessMask = [System.Security.AccessControl.FileSystemRights]::FullControl;
+                Principal = $folder.FullControlNtfs;
+            }
         }
         
         if ($folder.Share) {
@@ -76,6 +98,15 @@ configuration vTrainingLabFolders {
                 DestinationPath = $folderPath;
                 Type = 'Directory';
             }
+            
+            cAccessControlEntry $folderId {
+                Ensure = 'Present';
+                Path = $folderPath;
+                AceType = 'AccessAllowed';
+                ObjectType = 'Directory';
+                AccessMask = [System.Security.AccessControl.FileSystemRights]::Modify;
+                Principal = $department;
+            }
 
             xSmbShare $department {
                 Name = $department;
@@ -87,8 +118,6 @@ configuration vTrainingLabFolders {
                 DependsOn = "[File]$folderId";
             }
             
-            ##TODO Set NTFS permissions
-        
         } #end foreach department
     } #end if departments
     
@@ -99,13 +128,20 @@ configuration vTrainingLabFolders {
             $folderPath = '{0}\{1}' -f 'C:\SharedData\User Home Directories', $user.SamAccountName;
             $folderId = $folderPath.Replace(':','').Replace('\','_');
             
+            cAccessControlEntry $folderId {
+                Ensure = 'Present';
+                Path = $folderPath;
+                AceType = 'AccessAllowed';
+                ObjectType = 'Directory';
+                AccessMask = [System.Security.AccessControl.FileSystemRights]::FullControl;
+                Principal = $user.SamAccountName;
+            }
+            
             File $folderId {
                 DestinationPath = $folderPath;
                 Type = 'Directory';
             }
 
-            ##TODO Set NTFS permissions
-        
         } #end foreach user
     } #end if users
 

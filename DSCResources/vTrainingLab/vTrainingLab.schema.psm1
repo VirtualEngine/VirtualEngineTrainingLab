@@ -67,6 +67,7 @@ configuration vTrainingLab {
         @{  Path = 'C:\SharedData\Company Share';
             Share = 'Company';
             FullControl = 'Everyone';
+            ModifyNtfs = 'Users';
             Description = 'Company-wide shared information';
         }
         @{ Path = 'C:\SharedData\Company Share\Documentation'; }
@@ -77,19 +78,21 @@ configuration vTrainingLab {
             Path = 'C:\SharedData\DTS';
             Share = 'DTS$';
             FullControl = 'Everyone';
+            ModifyNtfs = 'Users';
             Description = 'RES ONE Workspace Desktop Sampler files';
         }
-        @{ Path = 'C:\SharedData\Labs'; }
         @{
             Path = 'C:\SharedData\Profiles';
             Share = 'Profile$';
             FullControl = 'Everyone';
+            FullControlNtfs = 'Users';
             Description = 'User roaming profiles';
         }
         @{
             Path = 'C:\SharedData\Profiles\TS Profiles';
             Share = 'TSProfile$';
             FullControl = 'Everyone';
+            FullControlNtfs = 'Users';
             Description = 'User Terminal Services roaming profiles';
         }
         @{ Path = 'C:\SharedData\Profiles\User Profiles'; }

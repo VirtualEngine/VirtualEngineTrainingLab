@@ -28,7 +28,7 @@ configuration vTrainingLabDns {
     }
     
     xDnsRecord 'itstore_CName' {
-        Name = 'itstore';
+        Name = 'servicestore';
         Zone = $DomainName;
         Target = $ITStoreHost;
         Type = 'CName';
