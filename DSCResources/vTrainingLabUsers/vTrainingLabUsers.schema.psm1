@@ -95,6 +95,8 @@ configuration vTrainingLabUsers {
                 HomeDirectory = '{0}\{1}\{2}' -f $FileServer, $HomeShare, $user.SamAccountName;
                 ProfilePath = $profilePath;
                 Manager = 'CN={0},{1}{2}' -f $managerCN, $manager.Path, $rootDN;
+                EmployeeID = [System.String] $user.EmployeeID;
+                EmployeeNumber = [System.String] $user.EmployeeNumber;
             }
             
         }
@@ -127,6 +129,8 @@ configuration vTrainingLabUsers {
                 HomeDrive = $HomeDrive;
                 HomeDirectory = '{0}\{1}\{2}' -f $FileServer, $HomeShare, $user.SamAccountName;
                 ProfilePath = $profilePath;
+                EmployeeID = [System.String] $user.EmployeeID;
+                EmployeeNumber = [System.String] $user.EmployeeNumber;
             }
         
         }
