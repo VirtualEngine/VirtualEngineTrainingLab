@@ -25,6 +25,8 @@ configuration vTrainingLabExchange {
     ## Cannot pass credentials via $using: ...
     $Username = $Credential.UserName;
     $Password = $Credential.GetNetworkCredential().Password;
+    $SessionName = 'vTrainingLabExchange';
+    $CommandNames = 'Enable-Mailbox','Enable-DistributionGroup','Get-ManagementRoleAssignment','New-ManagementRoleAssignment';
     
     Script 'MailEnableUniversalGroups' {
         GetScript = {
@@ -52,21 +54,19 @@ configuration vTrainingLabExchange {
     
         SetScript = {
             $serverName = ('{0}.{1}' -f $env:COMPUTERNAME, (Get-CimInstance -ClassName Win32_ComputerSystem -Verbose:$false).Domain).ToLower();
-            $sessionName = 'vTrainingLabExchange';
-            $commandNames = 'Enable-DistributionGroup';
-            $newCredential = New-Object PSCredential $using:Username, (ConvertTo-SecureString -String $using:Password -AsPlainText -Force);
-            $session = Get-PSSession -Name $sessionName -ErrorAction SilentlyContinue;
+            $session = Get-PSSession -Name $using:SessionName -ErrorAction SilentlyContinue;
 
             if ($null -eq $session) {
                 New-Alias -Name Get-ExBanner -Value Out-Null;
                 New-Alias -Name Get-Tip -Value Out-Null;
                 . "$env:ProgramFiles\Microsoft\Exchange Server\V15\Bin\RemoteExchange.ps1";
                 
+                $newCredential = New-Object PSCredential $using:Username, (ConvertTo-SecureString -String $using:Password -AsPlainText -Force);
                 $session = _NewExchangeRunspace -fqdn $serverName -Credential $newCredential -UseWIA $false -AllowRedirection $false
                 $session.Name = $sessionName;
             }
 
-            $moduleInfo = Import-PSSession -Session $session -WarningAction SilentlyContinue -DisableNameChecking -AllowClobber -CommandName $commandNames -Verbose:$false;
+            $moduleInfo = Import-PSSession -Session $session -WarningAction SilentlyContinue -DisableNameChecking -AllowClobber -CommandName $using:CommandNames -Verbose:$false;
             Import-Module $moduleInfo -Global -DisableNameChecking -Verbose:$false;
 
             Get-ADGroup -SearchBase $using:GroupSearchBase -Filter { GroupScope -eq 'Universal' -and Mail -notlike '*' } |
@@ -104,21 +104,19 @@ configuration vTrainingLabExchange {
     
         SetScript = {
             $serverName = ('{0}.{1}' -f $env:COMPUTERNAME, (Get-CimInstance -ClassName Win32_ComputerSystem -Verbose:$false).Domain).ToLower();
-            $sessionName = 'vTrainingLabExchange';
-            $commandNames = 'Enable-Mailbox';
-            $newCredential = New-Object PSCredential $using:Username, (ConvertTo-SecureString -String $using:Password -AsPlainText -Force);
-            $session = Get-PSSession -Name $sessionName -ErrorAction SilentlyContinue;
+            $session = Get-PSSession -Name $using:SessionName -ErrorAction SilentlyContinue;
 
             if ($null -eq $session) {
                 New-Alias -Name Get-ExBanner -Value Out-Null;
                 New-Alias -Name Get-Tip -Value Out-Null;
                 . "$env:ProgramFiles\Microsoft\Exchange Server\V15\Bin\RemoteExchange.ps1";
                 
+                $newCredential = New-Object PSCredential $using:Username, (ConvertTo-SecureString -String $using:Password -AsPlainText -Force);
                 $session = _NewExchangeRunspace -fqdn $serverName -Credential $newCredential -UseWIA $false -AllowRedirection $false
                 $session.Name = $sessionName;
             }
 
-            $moduleInfo = Import-PSSession -Session $session -WarningAction SilentlyContinue -DisableNameChecking -AllowClobber -CommandName $commandNames -Verbose:$false;
+            $moduleInfo = Import-PSSession -Session $session -WarningAction SilentlyContinue -DisableNameChecking -AllowClobber -CommandName $using:CommandNames -Verbose:$false;
             Import-Module $moduleInfo -Global -DisableNameChecking -Verbose:$false;
 
             Get-ADUser -SearchBase $using:UserSearchBase -Filter { Mail -notlike '*' } |
@@ -129,6 +127,79 @@ configuration vTrainingLabExchange {
                 }
         } #end set script
     } #end script MailEnableUsers
+    
+     Script 'MailboxImportExportRole' {
+        GetScript = {
+            $serverName = ('{0}.{1}' -f $env:COMPUTERNAME, (Get-CimInstance -ClassName Win32_ComputerSystem -Verbose:$false).Domain).ToLower();
+            $session = Get-PSSession -Name $using:SessionName -ErrorAction SilentlyContinue;
+
+            if ($null -eq $session) {
+                New-Alias -Name Get-ExBanner -Value Out-Null;
+                New-Alias -Name Get-Tip -Value Out-Null;
+                . "$env:ProgramFiles\Microsoft\Exchange Server\V15\Bin\RemoteExchange.ps1";
+                
+                $newCredential = New-Object PSCredential $using:Username, (ConvertTo-SecureString -String $using:Password -AsPlainText -Force);
+                $session = _NewExchangeRunspace -fqdn $serverName -Credential $newCredential -UseWIA $false -AllowRedirection $false
+                $session.Name = $sessionName;
+            }
+            
+            $moduleInfo = Import-PSSession -Session $session -WarningAction SilentlyContinue -DisableNameChecking -AllowClobber -CommandName $using:CommandNames -Verbose:$false;
+            Import-Module $moduleInfo -Global -DisableNameChecking -Verbose:$false;
+            
+            $managementRole = Get-ManagementRoleAssignment -RoleAssignee 'Organization Management' -Role 'Mailbox Import Export' -Delegating $false;
+            $targetResource = @{ Result = if ($managementRole) { 'Present' } else { 'Absent' }; }
+            return $targetResource;
+        } #end get script
+    
+        TestScript = {
+            $serverName = ('{0}.{1}' -f $env:COMPUTERNAME, (Get-CimInstance -ClassName Win32_ComputerSystem -Verbose:$false).Domain).ToLower();
+            $session = Get-PSSession -Name $using:SessionName -ErrorAction SilentlyContinue;
+
+            if ($null -eq $session) {
+                New-Alias -Name Get-ExBanner -Value Out-Null;
+                New-Alias -Name Get-Tip -Value Out-Null;
+                . "$env:ProgramFiles\Microsoft\Exchange Server\V15\Bin\RemoteExchange.ps1";
+                
+                $newCredential = New-Object PSCredential $using:Username, (ConvertTo-SecureString -String $using:Password -AsPlainText -Force);
+                $session = _NewExchangeRunspace -fqdn $serverName -Credential $newCredential -UseWIA $false -AllowRedirection $false
+                $session.Name = $sessionName;
+            }
+            
+            $moduleInfo = Import-PSSession -Session $session -WarningAction SilentlyContinue -DisableNameChecking -AllowClobber -CommandName $using:CommandNames -Verbose:$false;
+            Import-Module $moduleInfo -Global -DisableNameChecking -Verbose:$false;
+            
+            $managementRole = Get-ManagementRoleAssignment -RoleAssignee 'Organization Management' -Role 'Mailbox Import Export' -Delegating $false;
+            if ($managementRole) {
+                Write-Verbose 'Resource is in the desired state';
+                return $true;
+            }
+            else {
+                Write-Verbose 'Resource is NOT in the desired state';
+                return $false;
+            }
+        } #end test script
+    
+        SetScript = {
+            $serverName = ('{0}.{1}' -f $env:COMPUTERNAME, (Get-CimInstance -ClassName Win32_ComputerSystem -Verbose:$false).Domain).ToLower();
+            $session = Get-PSSession -Name $using:SessionName -ErrorAction SilentlyContinue;
+
+            if ($null -eq $session) {
+                New-Alias -Name Get-ExBanner -Value Out-Null;
+                New-Alias -Name Get-Tip -Value Out-Null;
+                . "$env:ProgramFiles\Microsoft\Exchange Server\V15\Bin\RemoteExchange.ps1";
+                
+                $newCredential = New-Object PSCredential $using:Username, (ConvertTo-SecureString -String $using:Password -AsPlainText -Force);
+                $session = _NewExchangeRunspace -fqdn $serverName -Credential $newCredential -UseWIA $false -AllowRedirection $false
+                $session.Name = $sessionName;
+            }
+
+            $moduleInfo = Import-PSSession -Session $session -WarningAction SilentlyContinue -DisableNameChecking -AllowClobber -CommandName $using:CommandNames -Verbose:$false;
+            Import-Module $moduleInfo -Global -DisableNameChecking -Verbose:$false;
+            
+            Write-Verbose ("Creating 'Mailbox Import Export' role assignment");
+            [ref] $null = New-ManagementRoleAssignment -SecurityGroup 'Organization Management' -Role 'Mailbox Import Export';
+        } #end set script
+    } #end script MailboxImportExportRole
     
     xADGroup 'OrganisationAdmins' {
         GroupName = 'Organization Management';

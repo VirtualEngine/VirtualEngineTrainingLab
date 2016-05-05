@@ -227,17 +227,17 @@ configuration vTrainingLab {
             @{  SamAccountName = 'LOCAL06'; GivenName = 'Ona'; Surname = 'Paar';
                 Telephone = '01234 567906'; Mobile = '07700 900087'; Fax = '01234 567899';
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
-                JobTitle = 'HR Director'; Department = 'Human Resources'; Office = 'Stark Tower'; Company = 'Stark Industries';
+                JobTitle = 'HR Director'; Department = 'HR'; Office = 'Stark Tower'; Company = 'Stark Industries';
                 Path = 'OU=Human Resources,OU=Users,OU=Training'; ManagedBy = 'LOCAL05'; }
             @{  SamAccountName = 'LOCAL07'; GivenName = 'Ally'; Surname = 'Monie';
                 Telephone = '01234 567907'; Mobile = '07700 900249'; Fax = '01234 567899';
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
-                JobTitle = 'HR Administrator'; Department = 'Human Resources'; Office = 'Stark Tower'; Company = 'Stark Industries';
+                JobTitle = 'HR Administrator'; Department = 'HR'; Office = 'Stark Tower'; Company = 'Stark Industries';
                 Path = 'OU=Human Resources,OU=Users,OU=Training'; ManagedBy = 'LOCAL06'; }
             @{  SamAccountName = 'LOCAL08'; GivenName = 'Hiram'; Surname = 'Cheaper';
                 Telephone = '01234 567908'; Mobile = '07700 900304'; Fax = '01234 567899';
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
-                JobTitle = 'HR Associate'; Department = 'Human Resources'; Office = 'Stark Tower'; Company = 'Stark Industries';
+                JobTitle = 'HR Associate'; Department = 'HR'; Office = 'Stark Tower'; Company = 'Stark Industries';
                 Path = 'OU=Human Resources,OU=Users,OU=Training'; ProfileType = 'Mandatory'; ManagedBy = 'LOCAL06'; }
         )
 
@@ -258,7 +258,7 @@ configuration vTrainingLab {
             @{ Name = 'Information Technology'; Path = 'OU=Groups,OU=Training'; Description = 'IT users'; Scope = 'Universal'; ManagedBy = 'ROAM01'; }
             @{ Name = 'Marketing'; Path = 'OU=Groups,OU=Training'; Description = 'Marketing users'; Scope = 'Universal'; ManagedBy = 'LOCAL04'; }
             @{ Name = 'Sales'; Path = 'OU=Groups,OU=Training'; Description = 'Sales users'; Scope = 'Universal'; ManagedBy = 'LOCAL01'; }
-            @{ Name = 'Human Resources'; Path = 'OU=Groups,OU=Training'; Description = 'HR users'; Scope = 'Universal'; ManagedBy = 'LOCAL06'; }
+            @{ Name = 'HR'; Path = 'OU=Groups,OU=Training'; Description = 'Human Resources users'; Scope = 'Universal'; ManagedBy = 'LOCAL06'; }
             @{ Name = 'RES AM Administrators'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Automation administation accounts';
                 Members = 'Domain Admins','Information Technology'; Scope = 'DomainLocal'; }
             @{ Name = 'RES AM Service Accounts'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Automation service accounts';
@@ -337,7 +337,7 @@ configuration vTrainingLab {
     }
     
     if ($PSBoundParameters.ContainsKey('ThumbnailPhotoPath')) {
-        vTrainingLabUserThumbnails 'UserThumbnails' {
+        vTrainingLabUserThumbnails 'UserThumbnailPhotos' {
             Users = $activeDirectory.Users;
             ThumbnailPhotoPath = $ThumbnailPhotoPath;
             DomainName = $DomainName;
