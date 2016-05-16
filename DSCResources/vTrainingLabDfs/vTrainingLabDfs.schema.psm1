@@ -44,9 +44,12 @@ configuration  vTrainingLabDfs {
         }
         
         $rootId = $dfsRootFolder.Path.Replace(':','').Replace(' ','').Replace('\','_');
+        ## If the node is a domain controller, a DFS root is automatically created using the NetBIOS name.
+        $netBIOSFileServer = $FileServer.Split('.')[0]
+
         xDFSNamespaceRoot $rootId {
             Path = '\\{0}\{1}' -f $DomainName, $DFSRoot;
-            TargetPath = '\\{0}\{1}' -f $FileServer, $dfsRootFolder.Share;
+            TargetPath = '\\{0}\{1}' -f $netBIOSFileServer, $dfsRootFolder.Share;
             Description = $dfsRootFolder.Description;
             Type = 'DomainV2';
             Ensure = 'Present'; 
