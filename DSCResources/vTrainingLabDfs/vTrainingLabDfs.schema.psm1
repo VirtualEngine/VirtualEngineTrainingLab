@@ -27,11 +27,21 @@ configuration  vTrainingLabDfs {
         [System.String[]] $Departments
     )
     
-    Import-DscResource -Module xDfs;
+    Import-DscResource -Module xDfs, PSDesiredStateConfiguration;
     
     $dfsRootFolder = $Folders | Where { $_.DfsRoot -eq $true } | Select -First 1;
     
     if ($dfsRootFolder) {
+        
+        WindowsFeature 'FS_DFS_Namespace' {
+            Name = 'FS-DFS-Namespace';
+            Ensure = 'Present';
+        }
+        
+        WindowsFeature 'RSAT_DFS_Mgmt_Con' {
+            Name = 'RSAT-DFS-Mgmt-Con';
+            Ensure = 'Present';
+        }
         
         $rootId = $dfsRootFolder.Path.Replace(':','').Replace(' ','').Replace('\','_');
         xDFSNamespaceRoot $rootId {
@@ -41,6 +51,7 @@ configuration  vTrainingLabDfs {
             Type = 'DomainV2';
             Ensure = 'Present'; 
             PsDscRunAsCredential = $Credential;
+            DependsOn = '[WindowsFeature]FS_DFS_Namespace', '[WindowsFeature]RSAT_DFS_Mgmt_Con';
         }
         
         ## Create the DFS folders
