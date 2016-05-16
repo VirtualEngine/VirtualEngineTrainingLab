@@ -1,5 +1,9 @@
 configuration vTrainingLab {
     param (
+        ## Active Directory credentials (for DFS creation)
+        [Parameter(Mandatory)]
+        [System.Management.Automation.PSCredential] $Credential,
+        
         ## Default user password to set/enforce
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential] $Password,
@@ -40,6 +44,10 @@ configuration vTrainingLab {
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $ITStoreHost = 'controller.lab.local',
         
+        ## DFS root share
+        [Parameter()] [ValidateNotNullOrEmpty()]
+        [System.String] $DFSRoot = 'DFS',
+        
         ## Hostname for storefront.$DomainName CNAME
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $StorefrontHost = 'xenapp.lab.local',
@@ -58,17 +66,28 @@ configuration vTrainingLab {
     Import-DscResource -Name vTrainingLabGPOs, vTrainingLabDns, vTrainingLabPrinters, vTrainingLabUserThumbnails;
     
     $folders = @(
+        @{  Path = 'C:\DFSRoots'; }
+        @{
+            Path = 'C:\DFSRoots\{0}' -f $DFSRoot;
+            Share = $DFSRoot;
+            FullControl = 'BUILTIN\Administrators';
+            ChangeControl = 'Everyone';
+            Description 'Distributed File System Root Share';
+            DfsRoot = $true;
+        }
         @{  Path = 'C:\SharedData'; }
         @{
             Path = 'C:\SharedData\App-V Content';
             Share = 'Content';
             Description = 'App-V packages';
+            DfsPath = 'Content';
         }
         @{  Path = 'C:\SharedData\Company Share';
             Share = 'Company';
             FullControl = 'Everyone';
             ModifyNtfs = 'Users';
             Description = 'Company-wide shared information';
+            DfsPath = 'Company';
         }
         @{ Path = 'C:\SharedData\Company Share\Documentation'; }
         @{ Path = 'C:\SharedData\Company Share\Media'; }
@@ -80,6 +99,7 @@ configuration vTrainingLab {
             FullControl = 'Everyone';
             ModifyNtfs = 'Users';
             Description = 'RES ONE Workspace Desktop Sampler files';
+            DfsPath = 'DTS';
         }
         @{
             Path = 'C:\SharedData\Profiles';
@@ -87,6 +107,7 @@ configuration vTrainingLab {
             FullControl = 'Everyone';
             FullControlNtfs = 'Users';
             Description = 'User roaming profiles';
+            DfsPath = 'Profiles';
         }
         @{
             Path = 'C:\SharedData\Profiles\TS Profiles';
@@ -102,12 +123,14 @@ configuration vTrainingLab {
             Share = 'Software';
             FullControl = 'Everyone';
             Description = 'Software repository';
+            DfsPath = 'Software';
         }
         @{
             Path = 'C:\SharedData\User Home Directories';
             Share = 'Home$';
             FullControl = 'Everyone';
             Description = 'User home folders';
+            DfsPath = 'Home Folders';
         }
     ) #end folders
     
@@ -329,6 +352,15 @@ configuration vTrainingLab {
     vTrainingLabFolders 'Folders' {
         Folders = $folders;
         Users = $activeDirectory.Users;
+        Departments = $activeDirectory.Users | % { $_.Department } | Select -Unique;
+    }
+    
+    vTrainingLabDfs 'Dfs' {
+        Folders = $folders;
+        Credential = $Credential;
+        DFSRoot = $DFSRoot;
+        DomainName = $DomainName;
+        FileServer = $FileServer;
         Departments = $activeDirectory.Users | % { $_.Department } | Select -Unique;
     }
     

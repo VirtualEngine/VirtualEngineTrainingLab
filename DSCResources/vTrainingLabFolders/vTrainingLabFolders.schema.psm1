@@ -48,12 +48,43 @@ configuration vTrainingLabFolders {
         
         if ($folder.Share) {
             $folderName = $folder.Share.Replace('$','');
-            if ($folder.FullControl -and $folder.Description) {
+            if ($folder.FullControl -and $folder.ChangeControl -and $folder.Description) {
                 xSmbShare $folderName {
                     Name = $folder.Share;
                     Path = $folder.Path;
                     Description = $folder.Description;
                     FullAccess = $folder.FullControl;
+                    ChangeAccess = $folder.ChangeControl;
+                    Ensure = 'Present';
+                    DependsOn = "[File]$folderId";
+                }
+            }
+            elseif ($folder.FullControl -and $folder.ChangeControl) {
+                xSmbShare $folderName {
+                    Name = $folder.Share;
+                    Path = $folder.Path;
+                    FullAccess = $folder.FullControl;
+                    ChangeAccess = $folder.ChangeControl;
+                    Ensure = 'Present';
+                    DependsOn = "[File]$folderId";
+                }
+            }
+            elseif ($folder.FullControl -and $folder.Description) {
+                xSmbShare $folderName {
+                    Name = $folder.Share;
+                    Path = $folder.Path;
+                    Description = $folder.Description;
+                    FullAccess = $folder.FullControl;
+                    Ensure = 'Present';
+                    DependsOn = "[File]$folderId";
+                }
+            }
+            elseif ($folder.ChangeControl -and $folder.Description) {
+                xSmbShare $folderName {
+                    Name = $folder.Share;
+                    Path = $folder.Path;
+                    Description = $folder.Description;
+                    ChangeAccess = $folder.ChangeControl;
                     Ensure = 'Present';
                     DependsOn = "[File]$folderId";
                 }
@@ -72,6 +103,15 @@ configuration vTrainingLabFolders {
                     Name = $folder.Share;
                     Path = $folder.Path;
                     FullAccess = $folder.FullControl;
+                    Ensure = 'Present';
+                    DependsOn = "[File]$folderId";
+                }
+            }
+            elseif ($folder.ChangeControl) {
+                xSmbShare $folderName {
+                    Name = $folder.Share;
+                    Path = $folder.Path;
+                    ChangeAccess = $folder.ChangeControl;
                     Ensure = 'Present';
                     DependsOn = "[File]$folderId";
                 }
