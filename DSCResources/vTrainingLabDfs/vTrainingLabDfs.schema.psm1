@@ -1,6 +1,6 @@
 #requires -Version 5
 
-configuration  vShowcaseLabDfs {
+configuration  vTrainingLabDfs {
     param (
         ## Collection of folders
         [Parameter(Mandatory)]
@@ -29,15 +29,15 @@ configuration  vShowcaseLabDfs {
     
     Import-DscResource -Module xDfs;
     
-    $dfsRoot = $Folders | Where { $_.DfsRoot -eq $true } | Select -First 1;
+    $dfsRootFolder = $Folders | Where { $_.DfsRoot -eq $true } | Select -First 1;
     
-    if ($dfsRoot) {
+    if ($dfsRootFolder) {
         
-        $rootId = $dfsRoot.Path.Replace(':','').Replace(' ','').Replace('\','_');
+        $rootId = $dfsRootFolder.Path.Replace(':','').Replace(' ','').Replace('\','_');
         xDFSNamespaceRoot $rootId {
-            Path = '\\{0}\{1}\{2}' -f $DomainName, $DFSRoot;
-            TargetPath = '\\{0}\{1}' -f $FileServer, $folder.Share;
-            Description = $folder.Description;
+            Path = '\\{0}\{1}' -f $DomainName, $DFSRoot;
+            TargetPath = '\\{0}\{1}' -f $FileServer, $dfsRootFolder.Share;
+            Description = $dfsRootFolder.Description;
             Type = 'DomainV2';
             Ensure = 'Present'; 
             PsDscRunAsCredential = $Credential;
@@ -64,7 +64,7 @@ configuration  vShowcaseLabDfs {
             
             $folderId = 'DFS_Department_{0}' -f $department.Replace(' ','');
             xDFSNamespaceFolder $folderId {
-                Path = '\\{0}\DFS\Departments\{1}' -f $DomainName, $DFSRoot, $department;
+                Path = '\\{0}\{1}\Departments\{2}' -f $DomainName, $DFSRoot, $department;
                 TargetPath = '\\{0}\{1}' -f $FileServer, $department;
                 Description = '{0} Department' -f $department;
                 Ensure = 'Present';
@@ -76,4 +76,4 @@ configuration  vShowcaseLabDfs {
         
     } #end if DFS Root
     
-} #end configuration vShowcaseLabDfs
+} #end configuration vTrainingLabDfs
