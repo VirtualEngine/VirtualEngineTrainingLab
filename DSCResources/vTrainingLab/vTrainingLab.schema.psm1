@@ -63,7 +63,7 @@ configuration vTrainingLab {
     
     ## Avoid recursive loading of the VirtualEngineTrainingLab composite resource
     Import-DscResource -Name vTrainingLabOUs, vTrainingLabUsers, vTrainingLabServiceAccounts, vTrainingLabGroups, vTrainingLabFolders;
-    Import-DscResource -Name vTrainingLabGPOs, vTrainingLabDns, vTrainingLabPrinters, vTrainingLabUserThumbnails;
+    Import-DscResource -Name vTrainingLabGPOs, vTrainingLabDns, vTrainingLabPrinters, vTrainingLabUserThumbnails, vTrainingLabScheduledTasks;
     
     $folders = @(
         @{  Path = 'C:\DFSRoots'; }
@@ -375,6 +375,11 @@ configuration vTrainingLab {
             DomainName = $DomainName;
             Extension = 'jpg';
         }   
+    }
+    
+    ## Disables "Maintenance Configurator" and "Idle Maintenance" tasks
+    vTrainingLabScheduledTasks {
+        State = 'Disabled';
     }
     
 } #end configuration vTrainingLab

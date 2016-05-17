@@ -4,6 +4,8 @@ Active Directory training environment. This module contains the following DSC re
 ### Included Resources
 * vTrainingLab
  * Creates the training folders, file shares, OUs, users, service accounts and groups.
+* vTrainingLabDfs
+ * Creates the training lab DFS root and folder namespaces. 
 * vTrainingLabDns
  * Creates the training lab DNS aliases and reverse DNS lookup zone. 
 * vTrainingLabExchange
@@ -20,6 +22,8 @@ Active Directory training environment. This module contains the following DSC re
  * Creates the training lab seal/preparation script.
 * vTrainingLabPrinters
  * Creates the shared department printers.
+* vTrainingLabScheduledTasks
+ * Manages the built-in maintenance scheduled tasks.
 * vTrainingLabServiceAccounts
  * Creates the training Active Directory service accounts.
 * vTrainingLabUsers
