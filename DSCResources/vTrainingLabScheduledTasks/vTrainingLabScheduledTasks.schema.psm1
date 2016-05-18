@@ -5,7 +5,7 @@ configuration vTrainingLabScheduledTasks {
         [System.String] $State
     )
     
-    Import-DscResource -Name vScheduledTasks;
+    Import-DscResource -Name vScheduledTask;
     
     foreach ($scheduledTask in @('Idle Maintenance','Maintenance Configurator')) {
         
