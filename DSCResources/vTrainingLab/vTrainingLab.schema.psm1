@@ -63,7 +63,7 @@ configuration vTrainingLab {
     
     ## Avoid recursive loading of the VirtualEngineTrainingLab composite resource
     Import-DscResource -Name vTrainingLabOUs, vTrainingLabUsers, vTrainingLabServiceAccounts, vTrainingLabGroups, vTrainingLabFolders;
-    Import-DscResource -Name vTrainingLabGPOs, vTrainingLabDns, vTrainingLabPrinters, vTrainingLabUserThumbnails;
+    Import-DscResource -Name vTrainingLabDfs, vTrainingLabGPOs, vTrainingLabDns, vTrainingLabPrinters, vTrainingLabUserThumbnails;
     
     $folders = @(
         @{  Path = 'C:\DFSRoots'; }
@@ -349,10 +349,12 @@ configuration vTrainingLab {
     }
     #endregion Group Policy
     
+    $departments = $activeDirectory.Users | % { $_.Department } | Select -Unique;
+    
     vTrainingLabFolders 'Folders' {
         Folders = $folders;
         Users = $activeDirectory.Users;
-        Departments = $activeDirectory.Users | % { $_.Department } | Select -Unique;
+        Departments = $departments;
     }
     
     vTrainingLabDfs 'Dfs' {
@@ -361,11 +363,11 @@ configuration vTrainingLab {
         DFSRoot = $DFSRoot;
         DomainName = $DomainName;
         FileServer = $FileServer;
-        Departments = $activeDirectory.Users | % { $_.Department } | Select -Unique;
+        Departments = $departments;
     }
     
     vTrainingLabPrinters 'Printers' {
-        Departments = $activeDirectory.Users | % { $_.Department } | Select -Unique;
+        Departments = $departments;
     }
     
     if ($PSBoundParameters.ContainsKey('ThumbnailPhotoPath')) {
