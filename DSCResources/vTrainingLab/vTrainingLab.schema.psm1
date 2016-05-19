@@ -72,7 +72,7 @@ configuration vTrainingLab {
             Share = $DFSRoot;
             FullControl = 'BUILTIN\Administrators';
             ChangeControl = 'Everyone';
-            Description 'Distributed File System Root Share';
+            Description = 'Distributed File System Root Share';
             DfsRoot = $true;
         }
         @{  Path = 'C:\SharedData'; }

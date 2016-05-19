@@ -7,7 +7,11 @@ configuration vTrainingLabScheduledTasks {
     
     Import-DscResource -Name vScheduledTask;
     
-    foreach ($scheduledTask in @('Idle Maintenance','Maintenance Configurator')) {
+    foreach ($scheduledTask in @(
+            'Idle Maintenance',
+            'Regular Maintenance',
+            'Maintenance Configurator')
+        ) {
         
         $scheduledTaskId = $scheduledTask.Replace(' ','');
         
