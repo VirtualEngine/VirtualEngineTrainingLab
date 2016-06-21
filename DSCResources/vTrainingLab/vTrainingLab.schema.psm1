@@ -3,68 +3,69 @@ configuration vTrainingLab {
         ## Active Directory credentials (for DFS creation)
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential] $Credential,
-        
+
         ## Default user password to set/enforce
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential] $Password,
-        
+
         ## IP address used to calculate reverse lookup zone name
         [Parameter(Mandatory)]
         [System.String] $IPAddress,
-        
+
         ## Folder containing GPO backup files
         [Parameter(Mandatory)]
         [System.String] $GPOBackupPath,
-               
+
         ## Domain root FQDN used to AD paths
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $DomainName = 'lab.local',
-        
+
         ## File server FQDN containing the user's home directories and profile shares
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $FileServer = 'controller.lab.local',
-        
+
         ## User's home drive assignment
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $HomeDrive = 'H:',
-        
+
         ## User home directory share name
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $HomeShare = 'Home$',
-        
+
         ## User profile directory share name
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $ProfileShare = 'Profile$',
-        
+
         ## Name of the mandatory user profile
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $MandatoryProfileName = 'Mandatory',
-        
+
         ## Hostname for itstore.$DomainName CNAME
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $ITStoreHost = 'controller.lab.local',
-        
+
         ## DFS root share
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $DFSRoot = 'DFS',
-        
+
         ## Hostname for storefront.$DomainName CNAME
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $StorefrontHost = 'xenapp.lab.local',
-        
+
         ## Hostname for smtp.$DomainName CNAME
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $SmtpHost = 'exchange.lab.local',
-        
-        ## Directory path containing user thumbnail photos 
+
+        ## Directory path containing user thumbnail photos
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $ThumbnailPhotoPath
     )
-    
+
     ## Avoid recursive loading of the VirtualEngineTrainingLab composite resource
-    Import-DscResource -Name vTrainingLabOUs, vTrainingLabUsers, vTrainingLabServiceAccounts, vTrainingLabGroups, vTrainingLabFolders;
-    Import-DscResource -Name vTrainingLabDfs, vTrainingLabGPOs, vTrainingLabDns, vTrainingLabPrinters, vTrainingLabUserThumbnails;
-    
+    Import-DscResource -Name vTrainingLabOUs, vTrainingLabUsers, vTrainingLabServiceAccounts, vTrainingLabGroups;
+    Import-DscResource -Name vTrainingLabFolders, vTrainingLabDfs, vTrainingLabGPOs, vTrainingLabDns;
+    Import-DscResource -Name vTrainingLabPrinters, vTrainingLabUserThumbnails, vTrainingLabPrepare;
+
     $folders = @(
         @{  Path = 'C:\DFSRoots'; }
         @{
@@ -133,9 +134,9 @@ configuration vTrainingLab {
             DfsPath = 'Home Folders';
         }
     ) #end folders
-    
+
     $rootDN = 'DC={0}' -f $DomainName -split '\.' -join ',DC=';
-    
+
     $activeDirectory = @{
         OUs = @(
             @{ Name = 'Training'; Description = 'Training group and user resources'; }
@@ -152,20 +153,20 @@ configuration vTrainingLab {
                     @{ Name = 'Marketing'; Path = 'OU=Users,OU=Training'; Description = 'Marketing department user accounts'; }
                     @{ Name = 'Sales'; Path = 'OU=Users,OU=Training'; Description = 'Sales department user accounts'; }
         )
-        
+
         GPOs = @{
             'Default Domain Policy' = @{ };
             'Default Lab Policy' = @{ Link = $rootDN; Enabled = $true; }
             'Invoke Workspace Composer' = @{ Link = "OU=Servers,OU=Training,$rootDN","OU=Computers,OU=Training,$rootDN"; Enabled = $false; }
         }
-        
+
         Users = @(
             # Executive
             @{  SamAccountName = 'LOCAL05'; GivenName = 'Tony'; Surname = 'Stark';
                 Telephone = '01234 567905'; Mobile = '07700 900440'; Fax = '01234 567899';
                 JobTitle = 'Chief Executive Officer'; Department = 'Executive'; Office = 'Stark Tower'; Company = 'Stark Industries';
                 Path = 'OU=Executive,OU=Users,OU=Training'; ManagedBy = 'LOCAL05'; }
-            
+
             # Engineering
             @{  SamAccountName = 'ROAM02'; GivenName = 'Gene'; Surname = 'Poole';
                 Telephone = '01234 567894'; Mobile = '07700 900622'; Fax = '01234 567899';
@@ -182,7 +183,7 @@ configuration vTrainingLab {
                 Address = 'Oxford Science Park'; City = 'Oxford'; State = 'OXON'; PostCode = 'AB12 3CD'; Country = 'GB';
                 JobTitle = 'Engineering Manager'; Department = 'Engineering'; Office = 'Medawar Centre'; Company = 'Stark Biotech';
                 Path = 'OU=Engineering,OU=Users,OU=Training'; ProfileType = 'Mandatory'; ManagedBy = 'ROAM02'; }
-            
+
             # Finance
             @{  SamAccountName = 'LOCAL03'; GivenName = 'Robin'; Surname = 'Banks';
                 Telephone = '01234 567891'; Mobile = '07700 900827'; Fax = '01234 567899';
@@ -199,7 +200,7 @@ configuration vTrainingLab {
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
                 JobTitle = 'Finance Clerk'; Department = 'Finance'; Office = 'Stark Tower'; Company = 'Stark Industries';
                 Path = 'OU=Finance,OU=Users,OU=Training'; ProfileType = 'Mandatory'; ManagedBy = 'LOCAL03'; }
-            
+
             # Information Technology
             @{  SamAccountName = 'ROAM01'; GivenName = 'Justin'; Surname = 'Case';
                 Telephone = '01234 567893'; Mobile = '07700 900155'; Fax = '01234 567899';
@@ -211,7 +212,7 @@ configuration vTrainingLab {
                 Address = 'Oxford Science Park'; City = 'Oxford'; State = 'OXON'; PostCode = 'AB12 3CD'; Country = 'GB';
                 JobTitle = 'Helpdesk Anaylst'; Department = 'Information Technology'; Office = 'Medawar Centre'; Company = 'Stark Industries';
                 Path = 'OU=Information Technology,OU=Users,OU=Training'; ProfileType = 'Roaming'; ManagedBy = 'ROAM01'; }
-            
+
             # Marketing
             @{  SamAccountName = 'LOCAL04'; GivenName = 'Mike'; Surname = 'Raffone';
                 Telephone = '01234 567890'; Mobile = '07700 900738'; Fax = '01234 567899';
@@ -228,7 +229,7 @@ configuration vTrainingLab {
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
                 JobTitle = 'Copy Writer'; Department = 'Marketing'; Office = 'Stark Tower'; Company = 'Stark Industries';
                 Path = 'OU=Marketing,OU=Users,OU=Training'; ProfileType = 'Mandatory'; ManagedBy = 'LOCAL04'; }
-            
+
             # Sales
             @{  SamAccountName = 'LOCAL01'; GivenName = 'Warren'; Surname = 'Peace';
                 Telephone = '01234 567892'; Mobile = '07700 900834'; Fax = '01234 567899';
@@ -245,7 +246,7 @@ configuration vTrainingLab {
                 Address = 'Columbus Circle'; City = 'New York'; State = 'NYC'; PostCode = '12345'; Country = 'US';
                 JobTitle = 'Account Manager'; Department = 'Sales'; Office = 'Stark Tower'; Company = 'Stark Industries';
                 Path = 'OU=Sales,OU=Users,OU=Training'; ProfileType = 'Mandatory'; ManagedBy = 'LOCAL01'; }
-                
+
             # HR
             @{  SamAccountName = 'LOCAL06'; GivenName = 'Ona'; Surname = 'Paar';
                 Telephone = '01234 567906'; Mobile = '07700 900087'; Fax = '01234 567899';
@@ -294,13 +295,13 @@ configuration vTrainingLab {
                     Members = 'Domain Admins','Information Technology'; Scope = 'DomainLocal'; }
             @{ Name = 'RES WM Service Accounts'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Workspace service accounts';
                     Members = 'Domain Admins','RESWM'; Scope = 'DomainLocal'; }
-            
+
             ## Add RES AM Service Account to domain admins
             @{ Name = 'Domain Admins'; Path = 'CN=Users'; Members = 'RESAM'; }
         )
-    
+
     } #end ActiveDirectory
-    
+
     #region DNS
     vTrainingLabDns 'ReverseLookupAndCNames' {
         IPAddress = $IPAddress;
@@ -310,19 +311,19 @@ configuration vTrainingLab {
         SmtpHost = $SmtpHost;
     }
     #endregion DNS
-    
+
     #region Active Directory
     vTrainingLabOUs 'OUs' {
         OUs = $activeDirectory.OUs;
         DomainName = $DomainName;
     }
-    
+
     vTrainingLabServiceAccounts 'ServiceAccounts' {
         ServiceAccounts = $activeDirectory.ServiceAccounts;
         Password = $Password;
         DomainName = $DomainName;
     }
-    
+
     vTrainingLabUsers 'Users' {
         Users = $activeDirectory.Users;
         Password = $Password;
@@ -332,13 +333,13 @@ configuration vTrainingLab {
         ProfileShare = $ProfileShare;
         MandatoryProfileName = $MandatoryProfileName;
     }
-    
+
     vTrainingLabGroups 'Groups' {
         Groups = $activeDirectory.Groups;
         Users = $activeDirectory.Users;
         DomainName = $DomainName;
     }
-    
+
     #endregion Active Directory
 
     #region Group Policy
@@ -348,15 +349,15 @@ configuration vTrainingLab {
         DependsOn = '[vTrainingLabOUs]OUs';
     }
     #endregion Group Policy
-    
+
     $departments = $activeDirectory.Users | % { $_.Department } | Select -Unique;
-    
+
     vTrainingLabFolders 'Folders' {
         Folders = $folders;
         Users = $activeDirectory.Users;
         Departments = $departments;
     }
-    
+
     vTrainingLabDfs 'Dfs' {
         Folders = $folders;
         Credential = $Credential;
@@ -365,18 +366,22 @@ configuration vTrainingLab {
         FileServer = $FileServer;
         Departments = $departments;
     }
-    
+
     vTrainingLabPrinters 'Printers' {
         Departments = $departments;
     }
-    
+
     if ($PSBoundParameters.ContainsKey('ThumbnailPhotoPath')) {
         vTrainingLabUserThumbnails 'UserThumbnailPhotos' {
             Users = $activeDirectory.Users;
             ThumbnailPhotoPath = $ThumbnailPhotoPath;
             DomainName = $DomainName;
             Extension = 'jpg';
-        }   
+        }
     }
-    
+
+    vTrainingLabPrepare 'PreparationScript' {
+        Path = 'C:\Windows\System32\Prepare.bat';
+    }
+
 } #end configuration vTrainingLab
