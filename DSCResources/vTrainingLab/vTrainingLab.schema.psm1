@@ -117,7 +117,6 @@ configuration vTrainingLab {
             FullControlNtfs = 'Users';
             Description = 'User Terminal Services roaming profiles';
         }
-        @{ Path = 'C:\SharedData\Profiles\User Profiles'; }
         @{ Path = 'C:\SharedData\Scripts'; }
         @{
             Path = 'C:\SharedData\Software';
