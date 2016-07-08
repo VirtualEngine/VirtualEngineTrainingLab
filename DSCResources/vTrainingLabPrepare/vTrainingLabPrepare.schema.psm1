@@ -1,12 +1,12 @@
 configuration vTrainingLabPrepare {
     param (
-        ## Target filename, e.g. "C:\Windows\System32\Prepare.bat" 
+        ## Target filename, e.g. "C:\Windows\System32\Prepare.bat"
         [Parameter(Mandatory)]
         [System.String] $Path
     )
-    
+
     Import-DscResource -Module PSDesiredStateConfiguration;
-    
+
     $prepareBat = @'
 @ECHO OFF
 
@@ -32,12 +32,12 @@ REM ***** Run .Net optimisation
 CD "%SYSTEMROOT%\Microsoft.NET"
 for /R %f in (ngen.exe) do @IF EXIST %f %f executeQueuedItems
 
-REG ADD HKLM\Software\VirtualEngine /v PreparationDate /t REG_SZ /d "%date% %time%" /f
+REG ADD "HKLM\Software\Virtual Engine" /v PreparationDate /t REG_SZ /d "%date% %time%" /f
 
 REM ***** Shutdown the VM immediately
 SHUTDOWN /S /T 0
 '@
-    
+
     File 'Prepare_BAT' {
         DestinationPath = $Path;
         Contents = $prepareBat;

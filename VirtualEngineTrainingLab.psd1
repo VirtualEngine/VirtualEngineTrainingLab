@@ -1,5 +1,5 @@
 @{
-    ModuleVersion = '1.12.0';
+    ModuleVersion = '1.12.1';
     RootModule = 'VirtualEngineTrainingLab.psm1';
     GUID = 'b0947d57-80d1-496d-bdab-9b2f777c5e36';
     Author = 'Iain Brighton';
