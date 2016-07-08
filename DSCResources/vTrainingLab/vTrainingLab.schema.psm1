@@ -62,8 +62,8 @@ configuration vTrainingLab {
     )
 
     ## Avoid recursive loading of the VirtualEngineTrainingLab composite resource
-    Import-DscResource -Name vTrainingLabOUs, vTrainingLabUsers, vTrainingLabServiceAccounts, vTrainingLabGroups;
-    Import-DscResource -Name vTrainingLabFolders, vTrainingLabDfs, vTrainingLabGPOs, vTrainingLabDns;
+    Import-DscResource -Name vTrainingLabPasswordPolicy, vTrainingLabOUs, vTrainingLabUsers, vTrainingLabServiceAccounts;
+    Import-DscResource -Name vTrainingLabGroups, vTrainingLabFolders, vTrainingLabDfs, vTrainingLabGPOs, vTrainingLabDns;
     Import-DscResource -Name vTrainingLabPrinters, vTrainingLabUserThumbnails, vTrainingLabPrepare;
 
     $folders = @(
@@ -103,7 +103,7 @@ configuration vTrainingLab {
             DfsPath = 'DTS';
         }
         @{
-            Path = 'C:\SharedData\Profiles';
+            Path = 'C:\SharedData\Profiles\User Profiles';
             Share = 'Profile$';
             FullControl = 'Everyone';
             FullControlNtfs = 'Users';
@@ -155,9 +155,8 @@ configuration vTrainingLab {
         )
 
         GPOs = @{
-            'Default Domain Policy' = @{ };
             'Default Lab Policy' = @{ Link = $rootDN; Enabled = $true; }
-            'Invoke Workspace Composer' = @{ Link = "OU=Servers,OU=Training,$rootDN","OU=Computers,OU=Training,$rootDN"; Enabled = $false; }
+            'Invoke Workspace Composer' = @{ Link = "OU=Servers,OU=Training,$rootDN"; Enabled = $false; }
         }
 
         Users = @(
@@ -313,6 +312,10 @@ configuration vTrainingLab {
     #endregion DNS
 
     #region Active Directory
+    vTrainingLabPasswordPolicy 'PasswordPolicy' {
+        Domain = $DomainName;
+    }
+
     vTrainingLabOUs 'OUs' {
         OUs = $activeDirectory.OUs;
         DomainName = $DomainName;

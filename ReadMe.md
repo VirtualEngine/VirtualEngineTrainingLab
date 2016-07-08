@@ -5,9 +5,9 @@ Active Directory training environment. This module contains the following DSC re
 * vTrainingLab
  * Creates the training folders, file shares, OUs, users, service accounts and groups.
 * vTrainingLabDfs
- * Creates the training lab DFS root and folder namespaces. 
+ * Creates the training lab DFS root and folder namespaces.
 * vTrainingLabDns
- * Creates the training lab DNS aliases and reverse DNS lookup zone. 
+ * Creates the training lab DNS aliases and reverse DNS lookup zone.
 * vTrainingLabExchange
  * Mail-enables users and universal security groups.
 * vTrainingLabFolders
@@ -18,6 +18,8 @@ Active Directory training environment. This module contains the following DSC re
  * Creates the training Active Directory groups.
 * vTrainingLabOUs
  * Creates the training Active Directory organisational units.
+* vTrainingLabPasswordPolicy
+ * Configures the default training lab Active Directory domain password policy.
 * vTrainingLabPrepare
  * Creates the training lab seal/preparation script.
 * vTrainingLabPrinters
