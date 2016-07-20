@@ -58,7 +58,11 @@ configuration vTrainingLab {
 
         ## Directory path containing user thumbnail photos
         [Parameter()] [ValidateNotNullOrEmpty()]
-        [System.String] $ThumbnailPhotoPath
+        [System.String] $ThumbnailPhotoPath,
+
+        ## Members to add to the 'Terminal Server License Servers' group
+        [Parameter()] [ValidateNotNullOrEmpty()]
+        [System.String[]] $TerminalServerLicenseServers = 'CONTROLLER$'
     )
 
     ## Avoid recursive loading of the VirtualEngineTrainingLab composite resource
@@ -294,8 +298,10 @@ configuration vTrainingLab {
             @{ Name = 'RES WM Service Accounts'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Workspace service accounts';
                     Members = 'Domain Admins','RESWM'; Scope = 'DomainLocal'; }
 
-            ## Add RES AM Service Account to domain admins
+            ## Add RES AM Service Account to 'Domain Admins' group
             @{ Name = 'Domain Admins'; Path = 'CN=Users'; Members = 'RESAM'; }
+            ## Add CONTROLLER to 'Terminal Server License Servers' group
+            @{ Name = 'Terminal Server License Servers'; Path = 'CN=Builtin'; Members = $TerminalServerLicenseServers; }
         )
 
     } #end ActiveDirectory
