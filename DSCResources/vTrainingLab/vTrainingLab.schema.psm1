@@ -301,7 +301,7 @@ configuration vTrainingLab {
             ## Add RES AM Service Account to 'Domain Admins' group
             @{ Name = 'Domain Admins'; Path = 'CN=Users'; Members = 'RESAM'; }
             ## Add CONTROLLER to 'Terminal Server License Servers' group
-            @{ Name = 'Terminal Server License Servers'; Path = 'CN=Builtin'; Members = $TerminalServerLicenseServers; }
+            @{ Name = 'Terminal Server License Servers'; Path = 'CN=Builtin'; Members = $TerminalServerLicenseServers; Scope = 'DomainLocal'; }
         )
 
     } #end ActiveDirectory
