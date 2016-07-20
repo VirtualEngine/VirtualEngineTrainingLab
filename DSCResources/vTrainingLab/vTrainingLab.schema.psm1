@@ -388,8 +388,4 @@ configuration vTrainingLab {
         }
     }
 
-    vTrainingLabPrepare 'PreparationScript' {
-        Path = 'C:\Windows\System32\Prepare.bat';
-    }
-
 } #end configuration vTrainingLab
