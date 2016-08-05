@@ -68,7 +68,7 @@ configuration vTrainingLab {
     ## Avoid recursive loading of the VirtualEngineTrainingLab composite resource
     Import-DscResource -Name vTrainingLabPasswordPolicy, vTrainingLabOUs, vTrainingLabUsers, vTrainingLabServiceAccounts;
     Import-DscResource -Name vTrainingLabGroups, vTrainingLabFolders, vTrainingLabDfs, vTrainingLabGPOs, vTrainingLabDns;
-    Import-DscResource -Name vTrainingLabPrinters, vTrainingLabUserThumbnails, vTrainingLabPrepare;
+    Import-DscResource -Name vTrainingLabPrinters, vTrainingLabUserThumbnails;
 
     $folders = @(
         @{  Path = 'C:\DFSRoots'; }
@@ -380,10 +380,27 @@ configuration vTrainingLab {
     }
 
     if ($PSBoundParameters.ContainsKey('ThumbnailPhotoPath')) {
+
         vTrainingLabUserThumbnails 'UserThumbnailPhotos' {
             Users = $activeDirectory.Users;
             ThumbnailPhotoPath = $ThumbnailPhotoPath;
             DomainName = $DomainName;
+            Extension = 'jpg';
+        }
+
+        vTrainingLabUserThumbnails 'ServiceAccountPhotos' {
+            Users = $activeDirectory.ServiceAccounts;
+            ThumbnailPhotoPath = $ThumbnailPhotoPath;
+            DomainName = $DomainName;
+            Filename = 'ServiceAccount';
+            Extension = 'jpg';
+        }
+
+        vADUserThumbnailPhoto 'AdministratorPhoto' {
+            Users = @{ SamAccountName = 'Administrator' }
+            ThumbnailPhotoPath = $ThumbnailPhotoPath;
+            DomainName = $DomainName;
+            Filename = 'AdminAccount';
             Extension = 'jpg';
         }
     }
