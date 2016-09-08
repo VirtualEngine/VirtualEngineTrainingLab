@@ -396,7 +396,7 @@ configuration vTrainingLab {
             Extension = 'jpg';
         }
 
-        vADUserThumbnailPhoto 'AdministratorPhoto' {
+        vTrainingLabUserThumbnails 'AdministratorPhoto' {
             Users = @{ SamAccountName = 'Administrator' }
             ThumbnailPhotoPath = $ThumbnailPhotoPath;
             DomainName = $DomainName;
