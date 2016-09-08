@@ -3,40 +3,40 @@ configuration vTrainingLabUsers {
         ## Collection of users
         [Parameter(Mandatory)]
         [System.Collections.Hashtable[]] $Users,
-        
+
         ## User password to set/enforce
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential] $Password,
-        
+
         ## Domain root FQDN used to AD paths
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $DomainName = 'lab.local',
-        
+
         ## File server FQDN containing the user's home directories and profile shares
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $FileServer = 'controller.lab.local',
-        
+
         ## User's home drive assignment
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $HomeDrive = 'H:',
-        
+
         ## User home directory share name
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $HomeShare = 'Home$',
-        
+
         ## User profile directory share name
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $ProfileShare = 'Profile$',
-        
+
         ## Name of the mandatory user profile
         [Parameter()] [ValidateNotNullOrEmpty()]
-        [System.String] $MandatoryProfileName = 'Mandatory' 
+        [System.String] $MandatoryProfileName = 'Mandatory'
     )
-    
+
     $rootDN = ',DC={0}' -f $DomainName -split '\.' -join ',DC=';
-    
+
     Import-DscResource -Module xActiveDirectory;
-    
+
     foreach ($user in $Users) {
 
         if ([System.String]::IsNullOrEmpty($user.Path)) {
@@ -62,7 +62,7 @@ configuration vTrainingLabUsers {
                 $profilePath = '';
             }
         }
-        
+
         if ($user.ManagedBy) {
             $manager = $Users.Where({ $_.SamAccountName -eq $user.ManagedBy });
             $managerCN = '{0} {1}' -f $manager.GivenName, $manager.Surname;
@@ -98,7 +98,7 @@ configuration vTrainingLabUsers {
                 EmployeeID = [System.String] $user.EmployeeID;
                 EmployeeNumber = [System.String] $user.EmployeeNumber;
             }
-            
+
         }
         else {
 
@@ -132,9 +132,9 @@ configuration vTrainingLabUsers {
                 EmployeeID = [System.String] $user.EmployeeID;
                 EmployeeNumber = [System.String] $user.EmployeeNumber;
             }
-        
+
         }
 
     } #end foreach user
-    
+
 } #end configuration vTrainingLabUsers
