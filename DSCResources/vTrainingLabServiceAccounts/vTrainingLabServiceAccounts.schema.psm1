@@ -56,7 +56,7 @@ configuration vTrainingLabServiceAccounts {
         GivenName = 'NetScaler';
         Surname = 'Service';
         DisplayName = 'NetScaler';
-        Description = 'NetScaler Service Account';
+        Description = 'NetScaler Authentication Service Account';
         PasswordNeverExpires = $true;
     }
 
