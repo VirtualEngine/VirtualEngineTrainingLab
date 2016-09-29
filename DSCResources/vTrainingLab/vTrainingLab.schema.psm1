@@ -40,9 +40,13 @@ configuration vTrainingLab {
         [Parameter()] [ValidateNotNullOrEmpty()]
         [System.String] $MandatoryProfileName = 'Mandatory',
 
-        ## Hostname for itstore.$DomainName CNAME
+        ## Hostname for servicestore.$DomainName CNAME
         [Parameter()] [ValidateNotNullOrEmpty()]
-        [System.String] $ITStoreHost = 'controller.lab.local',
+        [System.String] $ServiceStoreHost = 'controller.lab.local',
+
+        ## Hostname for catalogservices.$DomainName CNAME
+        [Parameter()] [ValidateNotNullOrEmpty()]
+        [System.String] $CatalogServicesHost = 'controller.lab.local',
 
         ## DFS root share
         [Parameter()] [ValidateNotNullOrEmpty()]
@@ -308,11 +312,12 @@ configuration vTrainingLab {
 
     #region DNS
     vTrainingLabDns 'ReverseLookupAndCNames' {
-        IPAddress = $IPAddress;
-        DomainName = $DomainName;
-        ITStoreHost = $ITStoreHost;
-        StorefrontHost = $StorefrontHost;
-        SmtpHost = $SmtpHost;
+        IPAddress           = $IPAddress;
+        DomainName          = $DomainName;
+        ServiceStoreHost    = $ServiceStoreHost;
+        CatalogServicesHost = $CatalogServicesHost;
+        StorefrontHost      = $StorefrontHost;
+        SmtpHost            = $SmtpHost;
     }
     #endregion DNS
 
@@ -322,29 +327,29 @@ configuration vTrainingLab {
     }
 
     vTrainingLabOUs 'OUs' {
-        OUs = $activeDirectory.OUs;
+        OUs        = $activeDirectory.OUs;
         DomainName = $DomainName;
     }
 
     vTrainingLabServiceAccounts 'ServiceAccounts' {
         ServiceAccounts = $activeDirectory.ServiceAccounts;
-        Password = $Password;
+        Password   = $Password;
         DomainName = $DomainName;
     }
 
     vTrainingLabUsers 'Users' {
-        Users = $activeDirectory.Users;
-        Password = $Password;
-        DomainName = $DomainName;
-        FileServer = $FileServer;
-        HomeDrive = $HomeDrive;
-        ProfileShare = $ProfileShare;
+        Users                = $activeDirectory.Users;
+        Password             = $Password;
+        DomainName           = $DomainName;
+        FileServer           = $FileServer;
+        HomeDrive            = $HomeDrive;
+        ProfileShare         = $ProfileShare;
         MandatoryProfileName = $MandatoryProfileName;
     }
 
     vTrainingLabGroups 'Groups' {
-        Groups = $activeDirectory.Groups;
-        Users = $activeDirectory.Users;
+        Groups     = $activeDirectory.Groups;
+        Users      = $activeDirectory.Users;
         DomainName = $DomainName;
     }
 
@@ -352,26 +357,26 @@ configuration vTrainingLab {
 
     #region Group Policy
     vTrainingLabGPOs 'GPOs' {
-        GPOBackupPath = $GPOBackupPath;
+        GPOBackupPath      = $GPOBackupPath;
         GroupPolicyObjects = $activeDirectory.GPOs;
-        DependsOn = '[vTrainingLabOUs]OUs';
+        DependsOn          = '[vTrainingLabOUs]OUs';
     }
     #endregion Group Policy
 
     $departments = $activeDirectory.Users | % { $_.Department } | Select -Unique;
 
     vTrainingLabFolders 'Folders' {
-        Folders = $folders;
-        Users = $activeDirectory.Users;
+        Folders     = $folders;
+        Users       = $activeDirectory.Users;
         Departments = $departments;
     }
 
     vTrainingLabDfs 'Dfs' {
-        Folders = $folders;
-        Credential = $Credential;
-        DFSRoot = $DFSRoot;
-        DomainName = $DomainName;
-        FileServer = $FileServer;
+        Folders     = $folders;
+        Credential  = $Credential;
+        DFSRoot     = $DFSRoot;
+        DomainName  = $DomainName;
+        FileServer  = $FileServer;
         Departments = $departments;
     }
 
@@ -382,26 +387,26 @@ configuration vTrainingLab {
     if ($PSBoundParameters.ContainsKey('ThumbnailPhotoPath')) {
 
         vTrainingLabUserThumbnails 'UserThumbnailPhotos' {
-            Users = $activeDirectory.Users;
+            Users              = $activeDirectory.Users;
             ThumbnailPhotoPath = $ThumbnailPhotoPath;
-            DomainName = $DomainName;
-            Extension = 'jpg';
+            DomainName         = $DomainName;
+            Extension          = 'jpg';
         }
 
         vTrainingLabUserThumbnails 'ServiceAccountPhotos' {
-            Users = $activeDirectory.ServiceAccounts;
+            Users              = $activeDirectory.ServiceAccounts;
             ThumbnailPhotoPath = $ThumbnailPhotoPath;
-            DomainName = $DomainName;
-            Filename = 'ServiceAccount';
-            Extension = 'jpg';
+            DomainName         = $DomainName;
+            Filename           = 'ServiceAccount';
+            Extension          = 'jpg';
         }
 
         vTrainingLabUserThumbnails 'AdministratorPhoto' {
-            Users = @{ SamAccountName = 'Administrator' }
+            Users              = @{ SamAccountName = 'Administrator' }
             ThumbnailPhotoPath = $ThumbnailPhotoPath;
-            DomainName = $DomainName;
-            Filename = 'AdminAccount';
-            Extension = 'jpg';
+            DomainName         = $DomainName;
+            Filename           = 'AdminAccount';
+            Extension          = 'jpg';
         }
     }
 
