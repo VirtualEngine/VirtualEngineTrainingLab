@@ -3,27 +3,27 @@ configuration vTrainingLabFolders {
         ## Collection of folders
         [Parameter(Mandatory)]
         [System.Collections.Hashtable[]] $Folders,
-        
+
         ## Collection of users to create home directories
         [Parameter(Mandatory)]
         [System.Collections.Hashtable[]] $Users,
-        
+
         ## Collections of departments to create department shares
         [Parameter()]
         [System.String[]] $Departments
     )
-    
+
     Import-DscResource -Module PSDesiredStateConfiguration, xSmbShare, PowerShellAccessControl;
-    
+
     foreach ($folder in $Folders) {
-        
+
         $folderId = $folder.Path.Replace(':','').Replace(' ','').Replace('\','_');
-        
+
         File $folderId {
             DestinationPath = $folder.Path;
             Type = 'Directory';
         }
-        
+
         if ($folder.ModifyNtfs) {
             cAccessControlEntry $folderId {
                 Ensure = 'Present';
@@ -32,9 +32,10 @@ configuration vTrainingLabFolders {
                 ObjectType = 'Directory';
                 AccessMask = [System.Security.AccessControl.FileSystemRights]::Modify;
                 Principal = $folder.ModifyNtfs;
+                DependsOn = "[File]$folderId";
             }
         }
-        
+
         if ($folder.FullControlNtfs) {
             cAccessControlEntry $folderId {
                 Ensure = 'Present';
@@ -43,9 +44,10 @@ configuration vTrainingLabFolders {
                 ObjectType = 'Directory';
                 AccessMask = [System.Security.AccessControl.FileSystemRights]::FullControl;
                 Principal = $folder.FullControlNtfs;
+                DependsOn = "[File]$folderId";
             }
         }
-        
+
         if ($folder.Share) {
             $folderName = $folder.Share.Replace('$','');
             if ($folder.FullControl -and $folder.ChangeControl -and $folder.Description) {
@@ -125,20 +127,20 @@ configuration vTrainingLabFolders {
                 }
             }
         } #end if shared
-        
+
     } #end foreach folder
-    
+
     if ($Departments) {
         foreach ($department in $Departments) {
-            
+
             $folderPath = '{0}\{1}' -f 'C:\SharedData\Departmental Shares', $department;
             $folderId = $folderPath.Replace(':','').Replace(' ','').Replace('\','_');
-            
+
             File $folderId {
                 DestinationPath = $folderPath;
                 Type = 'Directory';
             }
-            
+
             cAccessControlEntry $folderId {
                 Ensure = 'Present';
                 Path = $folderPath;
@@ -146,6 +148,7 @@ configuration vTrainingLabFolders {
                 ObjectType = 'Directory';
                 AccessMask = [System.Security.AccessControl.FileSystemRights]::Modify;
                 Principal = $department;
+                DependsOn = "[File]$folderId";
             }
 
             xSmbShare $department {
@@ -157,17 +160,22 @@ configuration vTrainingLabFolders {
                 Description = "$department departmental share";
                 DependsOn = "[File]$folderId";
             }
-            
+
         } #end foreach department
     } #end if departments
-    
+
     if ($Users) {
         ## Create home directories
         foreach ($user in $Users) {
-            
+
             $folderPath = '{0}\{1}' -f 'C:\SharedData\User Home Directories', $user.SamAccountName;
             $folderId = $folderPath.Replace(':','').Replace('\','_');
-            
+
+            File $folderId {
+                DestinationPath = $folderPath;
+                Type = 'Directory';
+            }
+
             cAccessControlEntry $folderId {
                 Ensure = 'Present';
                 Path = $folderPath;
@@ -175,11 +183,7 @@ configuration vTrainingLabFolders {
                 ObjectType = 'Directory';
                 AccessMask = [System.Security.AccessControl.FileSystemRights]::FullControl;
                 Principal = $user.SamAccountName;
-            }
-            
-            File $folderId {
-                DestinationPath = $folderPath;
-                Type = 'Directory';
+                DependsOn = "[File]$folderId";
             }
 
         } #end foreach user
