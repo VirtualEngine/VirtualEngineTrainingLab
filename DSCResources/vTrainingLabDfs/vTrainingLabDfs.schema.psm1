@@ -34,27 +34,36 @@ configuration  vTrainingLabDfs {
     if ($dfsRootFolder) {
         
         WindowsFeature 'FS_DFS_Namespace' {
-            Name = 'FS-DFS-Namespace';
+            Name   = 'FS-DFS-Namespace';
             Ensure = 'Present';
         }
         
         WindowsFeature 'RSAT_DFS_Mgmt_Con' {
-            Name = 'RSAT-DFS-Mgmt-Con';
+            Name   = 'RSAT-DFS-Mgmt-Con';
             Ensure = 'Present';
         }
         
         $rootId = $dfsRootFolder.Path.Replace(':','').Replace(' ','').Replace('\','_');
+        $rootIdConfig = '{0}Config' -f $rootId;
         ## If the node is a domain controller, a DFS root is automatically created using the NetBIOS name.
         $netBIOSFileServer = $FileServer.Split('.')[0]
 
-        xDFSNamespaceRoot $rootId {
-            Path = '\\{0}\{1}' -f $DomainName, $DFSRoot;
-            TargetPath = '\\{0}\{1}' -f $netBIOSFileServer, $dfsRootFolder.Share;
-            Description = $dfsRootFolder.Description;
-            Type = 'DomainV2';
-            Ensure = 'Present'; 
+        xDFSNamespaceServerConfiguration $rootIdConfig {
+            ## Required for Server 2016 (https://github.com/PowerShell/xDFS/issues/15)
+            IsSingleInstance     = 'Yes';
+            UseFQDN              = $false;
             PsDscRunAsCredential = $Credential;
-            DependsOn = '[WindowsFeature]FS_DFS_Namespace', '[WindowsFeature]RSAT_DFS_Mgmt_Con';
+            DependsOn            = '[WindowsFeature]FS_DFS_Namespace', '[WindowsFeature]RSAT_DFS_Mgmt_Con';
+        }
+
+        xDFSNamespaceRoot $rootId {
+            Path                 = '\\{0}\{1}' -f $DomainName, $DFSRoot;
+            TargetPath           = '\\{0}\{1}' -f $netBIOSFileServer, $dfsRootFolder.Share;
+            Description          = $dfsRootFolder.Description;
+            Type                 = 'DomainV2';
+            Ensure               = 'Present'; 
+            PsDscRunAsCredential = $Credential;
+            DependsOn            = "[xDFSNamespaceServerConfiguration]$rootIdConfig";
         }
         
         ## Create the DFS folders
@@ -63,12 +72,12 @@ configuration  vTrainingLabDfs {
             
             $folderId = 'DFS_{0}' -f $dfsFolder.Path.Replace(':','').Replace(' ','').Replace('\','_');
             xDFSNamespaceFolder $folderId {
-                Path = '\\{0}\{1}\{2}' -f $DomainName, $DFSRoot, $dfsFolder.DfsPath;
-                TargetPath = '\\{0}\{1}' -f $FileServer, $dfsFolder.Share;
-                Description = $dfsFolder.Description;
-                Ensure = 'Present';
+                Path                 = '\\{0}\{1}\{2}' -f $DomainName, $DFSRoot, $dfsFolder.DfsPath;
+                TargetPath           = '\\{0}\{1}' -f $FileServer, $dfsFolder.Share;
+                Description          = $dfsFolder.Description;
+                Ensure               = 'Present';
                 PsDscRunAsCredential = $Credential;
-                DependsOn = "[xDFSNamespaceRoot]$rootId";
+                DependsOn            = "[xDFSNamespaceRoot]$rootId";
             }
             
         } #end foreach DFS folder
@@ -78,12 +87,12 @@ configuration  vTrainingLabDfs {
             
             $folderId = 'DFS_Department_{0}' -f $department.Replace(' ','');
             xDFSNamespaceFolder $folderId {
-                Path = '\\{0}\{1}\Departments\{2}' -f $DomainName, $DFSRoot, $department;
-                TargetPath = '\\{0}\{1}' -f $FileServer, $department;
-                Description = '{0} Department' -f $department;
-                Ensure = 'Present';
+                Path                 = '\\{0}\{1}\Departments\{2}' -f $DomainName, $DFSRoot, $department;
+                TargetPath           = '\\{0}\{1}' -f $FileServer, $department;
+                Description          = '{0} Department' -f $department;
+                Ensure               = 'Present';
                 PsDscRunAsCredential = $Credential;
-                DependsOn = "[xDFSNamespaceRoot]$rootId";
+                DependsOn            = "[xDFSNamespaceRoot]$rootId";
             }
             
         } #end foreach department folder
