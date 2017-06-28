@@ -111,6 +111,14 @@ configuration vTrainingLab {
             DfsPath = 'DTS';
         }
         @{
+            Path = 'C:\SharedData\Profiles\Containers';
+            Share = 'ProfileContainer$';
+            FullControl = 'Everyone';
+            FullControlNtfs = 'Users';
+            Description = 'FSLogix Containers';
+            DfsPath = 'ProfileContainers';
+        }
+        @{
             Path = 'C:\SharedData\Profiles\User Profiles';
             Share = 'Profile$';
             FullControl = 'Everyone';
@@ -301,7 +309,10 @@ configuration vTrainingLab {
                     Members = 'Domain Admins','Information Technology'; Scope = 'DomainLocal'; }
             @{ Name = 'RES WM Service Accounts'; Path = 'OU=Groups,OU=Training'; Description = 'RES ONE Workspace service accounts';
                     Members = 'Domain Admins','RESWM'; Scope = 'DomainLocal'; }
-
+            
+            @{ Name = 'FSLogix ODFC'; Path = 'OU=Groups,OU=Training'; Description = 'FSLogix O365/OneDrive Container user accounts'; Scope = 'DomainLocal'; }
+            @{ Name = 'FSLogix Profile Containers'; Path = 'OU=Groups,OU=Training'; Description = 'FSLogix Profile Container user accounts'; Scope = 'DomainLocal'; }
+            
             ## Add RES AM Service Account to 'Domain Admins' group
             @{ Name = 'Domain Admins'; Path = 'CN=Users'; Members = 'RESAM'; }
             ## Add CONTROLLER to 'Terminal Server License Servers' group

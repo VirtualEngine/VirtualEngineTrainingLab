@@ -2,6 +2,7 @@ The VirtualEngineTrainingLab composite DSC resources can be used to create the V
 Active Directory training environment. This module contains the following DSC resources:
 
 ### Included Resources
+
 * vTrainingLab
  * Creates the training folders, file shares, OUs, users, service accounts and groups.
 * vTrainingLabDfs
@@ -34,6 +35,7 @@ Active Directory training environment. This module contains the following DSC re
  * Adds training Active Directory user thumbnails/pictures.
 
 ### Requirements
+
 There are __dependencies__ on the following DSC resources:
 
 * xSmbShare - https://github.com/PowerShell/xSmbShare
