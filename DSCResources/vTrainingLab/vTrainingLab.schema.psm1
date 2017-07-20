@@ -312,6 +312,7 @@ configuration vTrainingLab {
             
             @{ Name = 'FSLogix ODFC'; Path = 'OU=Groups,OU=Training'; Description = 'FSLogix O365/OneDrive Container user accounts'; Scope = 'DomainLocal'; }
             @{ Name = 'FSLogix Profile Containers'; Path = 'OU=Groups,OU=Training'; Description = 'FSLogix Profile Container user accounts'; Scope = 'DomainLocal'; }
+            @{ Name = 'ProfileUnity'; Path = 'OU=Groups,OU=Training'; Description = 'Liquidware ProfileUnity user accounts'; Scope = 'DomainLocal'; }
             
             ## Add RES AM Service Account to 'Domain Admins' group
             @{ Name = 'Domain Admins'; Path = 'CN=Users'; Members = 'RESAM'; }
