@@ -75,78 +75,80 @@ configuration vTrainingLab {
     Import-DscResource -Name vTrainingLabPrinters, vTrainingLabUserThumbnails;
 
     $folders = @(
-        @{  Path = 'C:\DFSRoots'; }
+        @{  Path          = 'C:\DFSRoots'; }
         @{
-            Path = 'C:\DFSRoots\{0}' -f $DFSRoot;
-            Share = $DFSRoot;
-            FullControl = 'BUILTIN\Administrators';
+            Path          = 'C:\DFSRoots\{0}' -f $DFSRoot;
+            Share         = $DFSRoot;
+            FullControl   = 'BUILTIN\Administrators';
             ChangeControl = 'Everyone';
-            Description = 'Distributed File System Root Share';
-            DfsRoot = $true;
+            Description   = 'Distributed File System Root Share';
+            DfsRoot       = $true;
         }
-        @{  Path = 'C:\SharedData'; }
+        @{  Path        = 'C:\SharedData'; }
         @{
-            Path = 'C:\SharedData\App-V Content';
-            Share = 'Content';
+            Path        = 'C:\SharedData\App-V Content';
+            Share       = 'Content';
             Description = 'App-V packages';
-            DfsPath = 'Content';
+            DfsPath     = 'Content';
         }
-        @{  Path = 'C:\SharedData\Company Share';
-            Share = 'Company';
+        @{
+            Path        = 'C:\SharedData\Company Share';
+            Share       = 'Company';
             FullControl = 'Everyone';
-            ModifyNtfs = 'Users';
+            ModifyNtfs  = 'Users';
             Description = 'Company-wide shared information';
-            DfsPath = 'Company';
+            DfsPath     = 'Company';
         }
-        @{ Path = 'C:\SharedData\Company Share\Documentation'; }
-        @{ Path = 'C:\SharedData\Company Share\Media'; }
-        @{ Path = 'C:\SharedData\Company Share\Portraits'; }
-        @{ Path = 'C:\SharedData\Departmental Shares'; }
+        @{  Path        = 'C:\SharedData\Company Share\Documentation'; }
+        @{  Path        = 'C:\SharedData\Company Share\Media'; }
+        @{  Path        = 'C:\SharedData\Company Share\Portraits'; }
+        @{  Path        = 'C:\SharedData\Departmental Shares'; }
         @{
-            Path = 'C:\SharedData\DTS';
-            Share = 'DTS$';
+            Path        = 'C:\SharedData\DTS';
+            Share       = 'DTS$';
             FullControl = 'Everyone';
-            ModifyNtfs = 'Users';
+            ModifyNtfs  = 'Users';
             Description = 'RES ONE Workspace Desktop Sampler files';
-            DfsPath = 'DTS';
+            DfsPath     = 'DTS';
         }
         @{
-            Path = 'C:\SharedData\Profiles\Containers';
-            Share = 'ProfileContainer$';
-            FullControl = 'Everyone';
+            Path            = 'C:\SharedData\Profiles\Containers';
+            Share           = 'ProfileContainer$';
+            FullControl     = 'Everyone';
             FullControlNtfs = 'Users';
-            Description = 'FSLogix Containers';
-            DfsPath = 'ProfileContainers';
-        }
-        @{
-            Path = 'C:\SharedData\Profiles\User Profiles';
-            Share = 'Profile$';
-            FullControl = 'Everyone';
+            Description     = 'FSLogix Containers';
+            DfsPath         = 'ProfileContainers'           ;
+        }          
+        @{    
+            Path            = 'C:\SharedData\Profiles\User Profiles';
+            Share           = 'Profile$';
+            FullControl     = 'Everyone';
             FullControlNtfs = 'Users';
-            Description = 'User roaming profiles';
-            DfsPath = 'Profiles';
+            Description     = 'User roaming profiles';
+            DfsPath         = 'Profiles';
         }
         @{
-            Path = 'C:\SharedData\Profiles\TS Profiles';
-            Share = 'TSProfile$';
-            FullControl = 'Everyone';
+            Path            = 'C:\SharedData\Profiles\TS Profiles';
+            Share           = 'TSProfile$';
+            FullControl     = 'Everyone';
             FullControlNtfs = 'Users';
-            Description = 'User Terminal Services roaming profiles';
+            Description     = 'User Terminal Services roaming profiles';
         }
-        @{ Path = 'C:\SharedData\Scripts'; }
+        @{  Path        = 'C:\SharedData\Scripts'; }
         @{
-            Path = 'C:\SharedData\Software';
-            Share = 'Software';
+            Path        = 'C:\SharedData\Software';
+            Share       = 'Software';
             FullControl = 'Everyone';
+            ReadNtfs    = 'Domain Computers';
             Description = 'Software repository';
-            DfsPath = 'Software';
+            DfsPath     = 'Software';
         }
         @{
-            Path = 'C:\SharedData\User Home Directories';
-            Share = 'Home$';
+            Path        = 'C:\SharedData\User Home Directories';
+            Share       = 'Home$';
             FullControl = 'Everyone';
             Description = 'User home folders';
-            DfsPath = 'Home Folders';
+            DfsPath     = 'Home Folders';
         }
     ) #end folders
 

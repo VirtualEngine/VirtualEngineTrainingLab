@@ -24,6 +24,18 @@ configuration vTrainingLabFolders {
             Type = 'Directory';
         }
 
+        if ($folder.ReadNtfs) {
+            cAccessControlEntry $folderId {
+                Ensure = 'Present';
+                Path = $folder.Path;
+                AceType = 'AccessAllowed';
+                ObjectType = 'Directory';
+                AccessMask = [System.Security.AccessControl.FileSystemRights]::ReadAndExecute;
+                Principal = $folder.ModifyNtfs;
+                DependsOn = "[File]$folderId";
+            }
+        }
+
         if ($folder.ModifyNtfs) {
             cAccessControlEntry $folderId {
                 Ensure = 'Present';
