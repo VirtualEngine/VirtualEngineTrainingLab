@@ -31,7 +31,7 @@ configuration vTrainingLabFolders {
                 AceType = 'AccessAllowed';
                 ObjectType = 'Directory';
                 AccessMask = [System.Security.AccessControl.FileSystemRights]::ReadAndExecute;
-                Principal = $folder.ModifyNtfs;
+                Principal = $folder.ReadNtfs;
                 DependsOn = "[File]$folderId";
             }
         }
